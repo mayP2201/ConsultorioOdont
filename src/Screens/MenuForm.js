@@ -6,6 +6,7 @@ export const MenuNavForm = ({ navigation }) => {
 
     const FinalizarSesion = () => {
         console.log("CERRAR");
+        navigation.replace("Login");
     }
 
     return (

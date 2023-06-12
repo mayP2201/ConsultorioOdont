@@ -33,17 +33,30 @@ const Login = ({ navigation }) => {
     const verifyPassword = (password) => {
         if (password.length < 8) {
             setErrorPassword(messages.PASSWORD_MIN);
-          } else if (!number(password)) {
+        } else if (!number(password)) {
             setErrorPassword(messages.PASSWORD_NUMBER);
-          } else if (!letter(password)) {
+        } else if (!letter(password)) {
             setErrorPassword(messages.PASSWORD_LETTER);
-          } else if (!specialCaracter(password)) {
+        } else if (!specialCaracter(password)) {
             setErrorPassword(messages.PASSWORD_CARACTER);
-          } else {
+        } else {
             setErrorPassword(null);
-          }
-          setPassword(password);
+        }
+        setPassword(password);
     }
+
+    const register = () => {
+        if (email == 'pamemh0122@gmail.com' && password == 'Dic2201@') {
+            goToMenu();
+        } else {
+            console.log("Error");
+        }
+    }
+
+    const goToMenu = () => {
+        console.log("Ir a Horario");
+        navigation.replace("Horario");
+    };
 
     return (
         <Principal>
@@ -80,19 +93,18 @@ const Login = ({ navigation }) => {
                         maxLength={25}
                         secureTextEntry={iconVisibility}
                         rightIcon={
-                                <Icon
-                                    onPress={passwordVisibility}
-                                    type="feather"
-                                    name={iconVisibility ? "eye-off" : "eye"}
-                                />
-                            }
+                            <Icon
+                                onPress={passwordVisibility}
+                                type="feather"
+                                name={iconVisibility ? "eye-off" : "eye"}
+                            />
+                        }
                         errorMessage={(errorPassword ? errorPassword : "")}
                         errorStyle={commonStyles.errorStyle}
                     />
-                     <TouchableOpacity
-                        onPress={() => navigation.navigate("RecoverPassword")}
-                    >
-                        <Text style={[styles.textLogin,{fontWeight : 'bold',fontSize:12}]}>¿Olvidaste tu contraseña?</Text>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("RecoverPassword")}>
+                        <Text style={[styles.textLogin, { fontWeight: 'bold', fontSize: 12 }]}>¿Olvidaste tu contraseña?</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={commonStyles.containerButton}>
@@ -101,7 +113,7 @@ const Login = ({ navigation }) => {
                         buttonStyle={commonStyles.buttonStyle}
                         containerStyle={commonStyles.introButton}
                         titleStyle={commonStyles.fontButton}
-                        onPress={this.register}
+                        onPress={register}
                     />
                     <Button
                         title={"Registrarse"}
@@ -113,7 +125,7 @@ const Login = ({ navigation }) => {
                 </View>
                 <View style={styles.textLog}>
                     <Text
-                        style={[styles.textLogin, { textDecorationLine: "none", fontSize:12 }]}
+                        style={[styles.textLogin, { textDecorationLine: "none", fontSize: 12 }]}
                     >
                         ¿Aún no tienes una cuenta?
                     </Text>
@@ -121,7 +133,7 @@ const Login = ({ navigation }) => {
                     <TouchableOpacity
                         onPress={() => navigation.navigate("Register")}
                     >
-                        <Text style={[styles.textLogin,{fontWeight : 'bold'}]}>¡Registrate!</Text>
+                        <Text style={[styles.textLogin, { fontWeight: 'bold' }]}>¡Registrate!</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

@@ -10,12 +10,14 @@ import NewPassword from './src/Screens/NewPasswordScreen';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MenuNavForm } from "./src/Screens/MenuForm";
+import {Schedule} from "./src/Screens/ScheduleScreen";
+import Information from "./src/Screens/InformationScreen";
 
 
 const Stack = createStackNavigator();
 const StackLogin = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
-const flag = false;
+const flag = true;
 
 ////////////////////////// ----------------------- Navegación Drawer -------------------------------------------
 const DrawerNav = () => {
@@ -29,14 +31,18 @@ const DrawerNav = () => {
       }}
     >
       <Drawer.Screen
-        name='DrawerMenuNav'
-        component={MenuNav}
-        options={{ title: 'Menú', headerShown: true, }} />
-      {/* <Drawer.Screen
-        name='DrawerTarjetasNav'
-        component={Tarjetas}
-        options={{ title: 'Tarjetas', headerShown: true, }} />
+        name='  '
+        component={Schedule}
+        options={{ title: 'Horario', headerShown: true, drawerItemStyle: { display: 'none' }}} />
       <Drawer.Screen
+        name='DrawerHorario'
+        component={Schedule}
+        options={{ title: 'Horario de Atención', headerShown: true, }} />
+        <Drawer.Screen
+        name='DrawerInfo'
+        component={Information}
+        options={{ title: 'Informacion', headerShown: true, }} />
+      {/*<Drawer.Screen
         name='DrawerTriviasNav'
         component={Trivias}
         options={{ title: 'Trivias', headerShown: true, }} />
@@ -52,6 +58,7 @@ const RegistroNav = () => {
   return (
     <StackLogin.Navigator>
       <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name='Horario' component={DrawerNav} options={{ headerShown: false }} />
       <Stack.Screen name='Register' component={Register} options={{ headerShown: false }} />
       <Stack.Screen name='RecoverPassword' component={RecoverPassword} options={{ headerShown: false }} />
       <Stack.Screen name='Code' component={Code} options={{ headerShown: false }} />
@@ -83,7 +90,8 @@ const MenuNav = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      {flag ? <DrawerNav /> : <RegistroNav />}
+      {/* {flag ? <DrawerNav /> : <RegistroNav />} */}
+      <RegistroNav />
     </NavigationContainer>
   );
 }
