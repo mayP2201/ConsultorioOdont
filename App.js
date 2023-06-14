@@ -37,7 +37,7 @@ const DrawerNav = () => {
       <Drawer.Screen
         name='DrawerHorario'
         component={Schedule}
-        options={{ title: 'Horario de Atención', headerShown: true, }} />
+        options={{ title: 'Citas', headerShown: true, }} />
         <Drawer.Screen
         name='DrawerInfo'
         component={Information}
