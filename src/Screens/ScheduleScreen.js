@@ -1,39 +1,46 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Alert } from 'react-native'
 import React, { useState } from 'react'
 import Calendar from 'react-native-big-calendar'
 import Principal from '../components/Principal';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { colors } from '../common/globalStyle';
 
-const events = [
-  {
-    title: 'Disponible',
-    start: new Date(2023, 5, 14, 9, 0),
-    end: new Date(2023, 5, 14, 11, 0),
-  },
-  {
-    title: 'Disponible',
-    start: new Date(2023, 5, 15, 10, 0),
-    end: new Date(2023, 5, 15, 12, 0),
-  },
-]
-
 
 export const Schedule = ({ navigation }) => {
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const { selectDoctor, setSelectDoctor } = useState("");
+  const [selectDoctor, setSelectDoctor ]  = useState(null);
+  const [isEvent, setIsEvent] = useState(false);
+  const [event, setEvent] = useState(false);
   const data = [
-    { key: '1', value: 'Juan' },
-    { key: '2', value: 'Lily' },
-    { key: '3', value: 'Maria' },
+    { key: '1', value: 'Pablo Arias' },
+    { key: '2', value: 'Lily Arias' },
+    { key: '3', value: 'Maria Perez' },
 
   ]
   const handleAppointmentPress = (event) => {
-    setSelectedAppointment(event);
+    console.log(event);
+    if(setEvent(event)){
+      setIsEvent(true);
+    }else{
+      setIsEvent(false);
+    }
+
   };
   const doctorSelector = (selectDoctor) => {
     setSelectDoctor(selectDoctor);
   }
+
+  const events = [
+    {
+      title: isEvent ? "Disponible" : "No disponible",
+      start: new Date(2023, 5, 14, 9, 0),
+      end: new Date(2023, 5, 14, 11, 0),
+    },
+    {
+      title: 'Disponible',
+      start: new Date(2023, 5, 15, 10, 0),
+      end: new Date(2023, 5, 15, 12, 0),
+    },
+  ]
   return (
     <Principal>
       <View>
@@ -42,11 +49,11 @@ export const Schedule = ({ navigation }) => {
         <SelectList
           data={data}
           setSelected={doctorSelector}
+          searchPlaceholder='Buscar'
           boxStyles={styles.boxStyles}
           inputStyles={{ color: colors.blue }}
-          onSelect={()=>alert(selectDoctor)}
           dropdownStyles={styles.boxListStyles}
-          placeholder='Selecciona un odontólogo'
+          placeholder='- Selecciona un odontólogo'
         />
         <View style={styles.calendar}>
           <Calendar
