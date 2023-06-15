@@ -14,7 +14,6 @@ const Information = () => {
                 <View>
                     <Text style={styles.textTile}>BIENVENIDO A ODONTOARIAS</Text>
                     <Text style={styles.textDescription}>Presentación de nuestros profesionales</Text>
-
                     <View style={styles.containerP}>
                         <Card containerStyle={styles.cardContainer}>
                             <Card.Title style={styles.titleCard}>Dr. Pablo Arias</Card.Title>
@@ -22,11 +21,11 @@ const Information = () => {
                             <Card.FeaturedSubtitle style={styles.subtitleCard}>Odontólogo</Card.FeaturedSubtitle>
                             <View style={styles.imgContainer}>
                                 <Card.Image style={styles.img} resizeMode='center' source={require('../../assets/o1.jpg')}></Card.Image>
-                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia 
-                                en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales. 
-                                Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener 
-                                una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar 
-                                resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
+                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia
+                                    en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales.
+                                    Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener
+                                    una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar
+                                    resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
                                 </Text>
                             </View>
                         </Card>
@@ -36,11 +35,11 @@ const Information = () => {
                             <Card.FeaturedSubtitle style={styles.subtitleCard}>Odontólogo</Card.FeaturedSubtitle>
                             <View style={styles.imgContainer}>
                                 <Card.Image style={styles.img} resizeMode='center' source={require('../../assets/o1.jpg')}></Card.Image>
-                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia 
-                                en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales. 
-                                Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener 
-                                una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar 
-                                resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
+                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia
+                                    en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales.
+                                    Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener
+                                    una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar
+                                    resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
                                 </Text>
                             </View>
                         </Card>
@@ -50,16 +49,23 @@ const Information = () => {
                             <Card.FeaturedSubtitle style={styles.subtitleCard}>Odontólogo</Card.FeaturedSubtitle>
                             <View style={styles.imgContainer}>
                                 <Card.Image style={styles.img} resizeMode='center' source={require('../../assets/o1.jpg')}></Card.Image>
-                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia 
-                                en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales. 
-                                Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener 
-                                una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar 
-                                resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
+                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia
+                                    en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales.
+                                    Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener
+                                    una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar
+                                    resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
                                 </Text>
                             </View>
                         </Card>
-
-
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <View style={styles.infoText}>
+                            <Text>Atención de: </Text>
+                            <Text>Lunes a Viernes </Text>
+                            <Text>8:00 a 17:00</Text>
+                            <Text>Para más información visita nuestra web</Text>
+                            <Text>www.odontoarias.com</Text>
+                        </View>
                     </View>
                 </View>
             </ScrollView>
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
     cardContainer: {
         borderRadius: 15,
         borderColor: colors.lightBlue,
-        margin:'3%'
+        margin: '3%'
 
     },
     containerP: {
@@ -108,17 +114,24 @@ const styles = StyleSheet.create({
     subtitleCard: {
         color: 'black',
         textAlign: 'center',
-        fontSize:14,
-        color:colors.lightBlue
+        fontSize: 14,
+        color: colors.lightBlue
     },
     desc: {
         textAlign: 'justify',
         color: colors.blue
     },
-    titleCard:{
-        fontSize:18,
+    titleCard: {
+        fontSize: 18,
         color: colors.blue
-    }
+    },
+    infoContainer: {
+        //backgroundColor: colors.blue,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '10%'
+    },
+    
 })
 
 export default Information;
