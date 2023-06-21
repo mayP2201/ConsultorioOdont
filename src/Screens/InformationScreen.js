@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { View, StyleSheet } from 'react-native';
 import { colors, commonStyles } from '../common/globalStyle';
 import Principal from '../components/Principal';
 import { ScrollView } from 'react-native';
 import { Button, Card, Icon } from 'react-native-elements';
 import { color } from 'react-native-reanimated';
+import { Touchable } from 'react-native';
 
 const Information = () => {
     return (
@@ -59,12 +60,15 @@ const Information = () => {
                         </Card>
                     </View>
                     <View style={styles.infoContainer}>
-                        <View style={styles.infoText}>
-                            <Text>Atención de: </Text>
-                            <Text>Lunes a Viernes </Text>
-                            <Text>8:00 a 17:00</Text>
-                            <Text>Para más información visita nuestra web</Text>
-                            <Text>www.odontoarias.com</Text>
+                        <View style={styles.infoTextContent}>
+                            <Text style={[styles.infoText,{textAlign:'left',fontWeight:'bold'}]}>Atención: </Text>
+                            <Text style={styles.infoText}>Lunes a Viernes </Text>
+                            <Text style={styles.infoText}>8:00 a 17:00</Text>
+                            <Text style={styles.infoText}>Para más información visita nuestra web</Text>
+                            <TouchableOpacity>
+                                <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>www.odontoarias.com</Text>
+                            </TouchableOpacity>
+
                         </View>
                     </View>
                 </View>
@@ -126,12 +130,33 @@ const styles = StyleSheet.create({
         color: colors.blue
     },
     infoContainer: {
-        //backgroundColor: colors.blue,
+        backgroundColor: colors.base,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: '10%'
     },
-    
+    infoTextContent: {
+        //backgroundColor: 'yellow',
+        margin: '2%',
+        padding: '2%'
+    },
+    infoText: {
+        textAlign: 'center',
+        fontSize:14,
+        color:colors.blue
+        
+    },
+    textWeb: {
+        textAlign: "center",
+        fontSize: 14,
+        fontStyle: "italic",
+        color: colors.light,
+        textDecorationLine: "underline",
+        fontSize:16,
+        color:colors.blue
+    },
+
+
 })
 
 export default Information;

@@ -136,14 +136,14 @@ const Register = ({ navigation }) => {
     }
 
     const register = () => {
-        setErrorName("");
-        setErrorLastName("");
-        setErrorEmail("");
-        setErrorPhone("");
-        setErrorPassword("");
-        setErrorMathPassword("");
         if (validate()) {
             console.log("Guardando....");
+            setErrorName("");
+            setErrorLastName("");
+            setErrorEmail("");
+            setErrorPhone("");
+            setErrorPassword("");
+            setErrorMathPassword("");
             goToLogin();
         } else {
             console.log("error");

@@ -12,12 +12,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MenuNavForm } from "./src/Screens/MenuForm";
 import {Schedule} from "./src/Screens/ScheduleScreen";
 import Information from "./src/Screens/InformationScreen";
+import { Profile } from "./src/Screens/ProfileScreen";
 
 
 const Stack = createStackNavigator();
 const StackLogin = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
-const flag = true;
 
 ////////////////////////// ----------------------- Navegación Drawer -------------------------------------------
 const DrawerNav = () => {
@@ -42,11 +42,11 @@ const DrawerNav = () => {
         name='DrawerInfo'
         component={Information}
         options={{ title: 'Informacion', headerShown: true, }} />
-      {/*<Drawer.Screen
-        name='DrawerTriviasNav'
-        component={Trivias}
-        options={{ title: 'Trivias', headerShown: true, }} />
       <Drawer.Screen
+        name='DrawerProfile'
+        component={Profile}
+        options={{ title: 'Perfil', headerShown: true, }} />
+      {/*<Drawer.Screen
         name='CerrarSesion'
         component={FinalizarSesion}
         options={{ title: 'Cerrar Sesión', headerShown: true, }} /> */}
