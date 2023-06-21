@@ -8,6 +8,7 @@ import { messages } from '../common/messages';
 import { useState } from 'react';
 import { Modal } from 'react-native';
 import { Alert } from 'react-native';
+import ModalC from '../components/ModalC';
 
 const Register = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -139,11 +140,11 @@ const Register = ({ navigation }) => {
 
     const register = () => {
 
-        if(name.trim()==="" && lastName.trim()===""
-        && id.trim()==="" && email.trim()===""
-        && phone.trim()==="" && password.trim()===""
-        && confirmPassword.trim()===""
-        ){
+        if (name.trim() === "" && lastName.trim() === ""
+            && id.trim() === "" && email.trim() === ""
+            && phone.trim() === "" && password.trim() === ""
+            && confirmPassword.trim() === ""
+        ) {
             setErrorName(messages.INCORRECT_NAME);
             setErrorLastName(messages.INCORRECT_LASTNAME);
             setErrorId(messages.INCORRECT_ID_ERROR);
@@ -152,7 +153,7 @@ const Register = ({ navigation }) => {
             setErrorPassword(messages.PASSWORDS_NOTSECURITY);
             setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
         }
-        else{
+        else {
             setErrorName(null);
             setErrorLastName(null);
             setErrorId(null);
@@ -170,11 +171,11 @@ const Register = ({ navigation }) => {
             setErrorPassword("");
             setErrorMathPassword("");
             setModalVisible(true);
-        } 
+        }
         else {
             console.log("error");
             Alert.alert("Verifique los datos");
-            
+
         }
     };
 
@@ -212,7 +213,13 @@ const Register = ({ navigation }) => {
 
         return true;
     };
+    buttonAceptModal = () => {
+        goToLogin();
+    }
 
+    buttonCancelModal = () => {
+        setModalVisible(!modalVisible);
+    }
     const goToLogin = () => {
         navigation.navigate("Login");
         console.log("Ir a Login");
@@ -368,36 +375,13 @@ const Register = ({ navigation }) => {
                             <Text style={[styles.textLogin, { fontWeight: 'bold' }]}>¡Inicia sesión!</Text>
                         </TouchableOpacity>
                     </View>
-
-                    <View style={styles.centeredView}>
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={modalVisible}>
-                            <View style={styles.centeredView}>
-                                <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>¡Registro Existoso!</Text>
-                                    <View style={[commonStyles.containerButton, { flexDirection: 'row' }
-                                    ]}>
-                                        <Button
-                                            title={"Cancelar"}
-                                            buttonStyle={commonStyles.buttonStyle}
-                                            titleStyle={[commonStyles.fontButton, { fontSize: 16 }]}
-                                            containerStyle={styles.modalButton}
-                                            onPress={() => setModalVisible(!modalVisible)}
-                                        />
-                                        <Button
-                                            title={"Aceptar"}
-                                            buttonStyle={[commonStyles.buttonStyle, { backgroundColor: colors.green }]}
-                                            titleStyle={[commonStyles.fontButton, { fontSize: 16 }]}
-                                            containerStyle={styles.modalButton}
-                                            onPress={goToLogin}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                        </Modal>
-                    </View>
+                    <ModalC
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
+                        onAccept={buttonAceptModal}
+                        onCancel={buttonCancelModal}
+                        modalText="¡Registro Exitoso!"
+                    />
                 </View>
             </ScrollView>
         </Principal>
@@ -457,36 +441,6 @@ const styles = StyleSheet.create({
         color: colors.light,
         textDecorationLine: "underline",
     },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-      },
-      modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-      },
-      modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
-      },
-      modalButton: {
-        //backgroundColor:'yellow',
-        marginHorizontal: '10%',
-        marginVertical: '2%'
-      },
 });
 
 export default Register;
