@@ -6,9 +6,11 @@ import { Icon, Button } from '@rneui/themed';
 import { letter, number, specialCaracter, validateEmail1, validateId, validateLastName, validateName, validatePhone } from '../services/validations';
 import { messages } from '../common/messages';
 import { useState } from 'react';
+import { Modal } from 'react-native';
+import { Alert } from 'react-native';
 
 const Register = ({ navigation }) => {
-    const [name, setName] = useState();
+    const [name, setName] = useState("");
     const [errorName, setErrorName] = useState("");
     const [lastName, setLastName] = useState("");
     const [errorLastName, setErrorLastName] = useState("");
@@ -24,6 +26,7 @@ const Register = ({ navigation }) => {
     const [errorId, setErrorId] = useState("");
     const [iconVisibility, setIconVisibility] = useState(true);
     const [iconVisibility1, setIconVisibility1] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
 
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
@@ -114,9 +117,8 @@ const Register = ({ navigation }) => {
         } else if (!specialCaracter(password)) {
             setErrorPassword(messages.PASSWORD_CARACTER);
         } else {
-            setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
+            matchPassword(password, confirmPassword);
             setErrorPassword(null);
-
         }
         setPassword(password);
     }
@@ -136,6 +138,29 @@ const Register = ({ navigation }) => {
     }
 
     const register = () => {
+
+        if(name.trim()==="" && lastName.trim()===""
+        && id.trim()==="" && email.trim()===""
+        && phone.trim()==="" && password.trim()===""
+        && confirmPassword.trim()===""
+        ){
+            setErrorName(messages.INCORRECT_NAME);
+            setErrorLastName(messages.INCORRECT_LASTNAME);
+            setErrorId(messages.INCORRECT_ID_ERROR);
+            setErrorEmail(messages.EMAIL_INCORRECT);
+            setErrorPhone(messages.PHONE_INCORRECT);
+            setErrorPassword(messages.PASSWORDS_NOTSECURITY);
+            setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
+        }
+        else{
+            setErrorName(null);
+            setErrorLastName(null);
+            setErrorId(null);
+            setErrorEmail(null);
+            setErrorPhone(null);
+            setErrorPassword(null);
+            setErrorMathPassword(null);
+        }
         if (validate()) {
             console.log("Guardando....");
             setErrorName("");
@@ -144,9 +169,12 @@ const Register = ({ navigation }) => {
             setErrorPhone("");
             setErrorPassword("");
             setErrorMathPassword("");
-            goToLogin();
-        } else {
+            setModalVisible(true);
+        } 
+        else {
             console.log("error");
+            Alert.alert("Verifique los datos");
+            
         }
     };
 
@@ -185,10 +213,8 @@ const Register = ({ navigation }) => {
         return true;
     };
 
-
-
     const goToLogin = () => {
-        // navigation.navigate("Login");
+        navigation.navigate("Login");
         console.log("Ir a Login");
     };
 
@@ -342,6 +368,36 @@ const Register = ({ navigation }) => {
                             <Text style={[styles.textLogin, { fontWeight: 'bold' }]}>¡Inicia sesión!</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <View style={styles.centeredView}>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}>
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>¡Registro Existoso!</Text>
+                                    <View style={[commonStyles.containerButton, { flexDirection: 'row' }
+                                    ]}>
+                                        <Button
+                                            title={"Cancelar"}
+                                            buttonStyle={commonStyles.buttonStyle}
+                                            titleStyle={[commonStyles.fontButton, { fontSize: 16 }]}
+                                            containerStyle={styles.modalButton}
+                                            onPress={() => setModalVisible(!modalVisible)}
+                                        />
+                                        <Button
+                                            title={"Aceptar"}
+                                            buttonStyle={[commonStyles.buttonStyle, { backgroundColor: colors.green }]}
+                                            titleStyle={[commonStyles.fontButton, { fontSize: 16 }]}
+                                            containerStyle={styles.modalButton}
+                                            onPress={goToLogin}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
+                    </View>
                 </View>
             </ScrollView>
         </Principal>
@@ -372,8 +428,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         maxWidth: '100%',
         marginTop: 10
-
-
     },
 
     InputContainer: {
@@ -403,6 +457,36 @@ const styles = StyleSheet.create({
         color: colors.light,
         textDecorationLine: "underline",
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+      },
+      modalButton: {
+        //backgroundColor:'yellow',
+        marginHorizontal: '10%',
+        marginVertical: '2%'
+      },
 });
 
 export default Register;
