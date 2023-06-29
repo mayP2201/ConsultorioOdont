@@ -14,8 +14,8 @@ const Code = ({ navigation }) => {
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={styles.textTile}>RECUPERAR</Text>
-                    <Text style={styles.textTile1}>CONTRASEÑA</Text>
+                    <Text style={commonStyles.textTile}>RECUPERAR</Text>
+                    <Text style={commonStyles.textTile1}>CONTRASEÑA</Text>
                     <Text style={styles.textDescription}>Escribe el código que hemos enviado a tu correo electrónico</Text>
                     <View style={styles.principalContainer}>
                         <View style={styles.input}>
@@ -78,25 +78,7 @@ const styles = StyleSheet.create({
         marginTop: '15%'
 
     },
-    textTile1: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.blue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        
-    },
 
-    textDescription: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: colors.lightBlue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 10
-
-
-    },
     InputContainer: {
         //backgroundColor: 'pink',
         color: colors.blue,

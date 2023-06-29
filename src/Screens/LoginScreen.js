@@ -2,10 +2,13 @@ import { StyleSheet, Text, Image, View, ScrollView, TouchableOpacity } from 'rea
 import Principal from '../components/Principal';
 import { colors, commonStyles } from '../common/globalStyle';
 import { Input } from '@rneui/base';
-import { Icon, Button } from '@rneui/themed';
-import { useState } from 'react';
+import { Button } from '@rneui/themed';
+import { useState, useEffect } from 'react';
 import { letter, number, specialCaracter, validateCorrectEmail, validateCorrectPassword, validateEmail1 } from '../services/validations';
 import { messages } from '../common/messages';
+import ModalC from '../components/ModalC';
+import { Icon } from 'react-native-elements';
+import axios from 'axios';
 
 const Login = ({ navigation }) => {
 
@@ -14,6 +17,27 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState();
     const [errorPassword, setErrorPassword] = useState();
     const [iconVisibility, setIconVisibility] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [data, setData] = useState([]);
+
+
+    const handleLogin = () => {
+        axios.post('https://endpointsco-production.up.railway.app/api/login', {
+          email: email,
+          password: password
+          
+        })      
+        .then(response => {
+          console.log(response.data);
+          setData(response.data);
+          goToMenu();
+          
+        })
+        .catch(error => {
+          //console.error(error);
+          setModalVisible(true);
+        });
+      };
 
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
@@ -45,18 +69,15 @@ const Login = ({ navigation }) => {
         setPassword(password);
     }
 
-    const register = () => {
-        if (email == 'pamemh0122@gmail.com' && password == 'Dic2201@') {
-            goToMenu();
-        } else {
-            console.log("Error");
-        }
-    }
-
+    
     const goToMenu = () => {
         console.log("Ir a Horario");
         navigation.replace("Horario");
     };
+
+    buttonAceptModal = () => {
+        setModalVisible(!modalVisible);
+    }
 
     return (
         <Principal>
@@ -113,7 +134,7 @@ const Login = ({ navigation }) => {
                         buttonStyle={commonStyles.buttonStyle}
                         containerStyle={commonStyles.introButton}
                         titleStyle={commonStyles.fontButton}
-                        onPress={register}
+                        onPress={handleLogin}
                     />
                     <Button
                         title={"Registrarse"}
@@ -136,6 +157,14 @@ const Login = ({ navigation }) => {
                         <Text style={[styles.textLogin, { fontWeight: 'bold' }]}>¡Registrate!</Text>
                     </TouchableOpacity>
                 </View>
+                <ModalC
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    onAccept={buttonAceptModal}
+                    modalText="Credenciales incorrectas"
+                    showCancelButton={false}
+                    imageModal={require('../../assets/attention.png')}
+                />
             </ScrollView>
         </Principal>
     );

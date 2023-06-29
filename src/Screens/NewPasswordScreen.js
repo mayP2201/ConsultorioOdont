@@ -59,9 +59,9 @@ const NewPassword = ({ navigation }) => {
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={styles.textTile}>RECUPERAR</Text>
+                    <Text style={commonStyles.textTile}>RECUPERAR</Text>
                     <Text style={styles.textTile1}>CONTRASEÑA</Text>
-                    <Text style={styles.textDescription}>Escribe tu nueva contraseña de minimo ocho caracteres</Text>
+                    <Text style={commonStyles.textDescription}>Escribe tu nueva contraseña de minimo ocho caracteres</Text>
                     <View style={styles.principalContainer}>
                         <View style={styles.input}>
                             <Input style={styles.InputContainer}
@@ -134,35 +134,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    textTile: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.blue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: '15%'
 
-    },
     textTile1: {
         fontSize: 24,
         fontWeight: 'bold',
         color: colors.blue,
         textAlign: 'center',
         maxWidth: '100%',
-
-
     },
 
-    textDescription: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: colors.lightBlue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 10
-
-
-    },
     InputContainer: {
         //backgroundColor: 'pink',
         color: colors.blue,

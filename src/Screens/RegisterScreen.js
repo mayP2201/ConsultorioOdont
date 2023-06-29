@@ -6,8 +6,8 @@ import { Icon, Button } from '@rneui/themed';
 import { letter, number, specialCaracter, validateEmail1, validateId, validateLastName, validateName, validatePhone } from '../services/validations';
 import { messages } from '../common/messages';
 import { useState } from 'react';
-import { Modal } from 'react-native';
 import { Alert } from 'react-native';
+import axios from 'axios';
 import ModalC from '../components/ModalC';
 
 const Register = ({ navigation }) => {
@@ -28,7 +28,29 @@ const Register = ({ navigation }) => {
     const [iconVisibility, setIconVisibility] = useState(true);
     const [iconVisibility1, setIconVisibility1] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
+    const [address, setAddress] = useState("");
+    
 
+    const handleRegistration = () => {
+        axios.post('https://endpointsco-production.up.railway.app/api/register/patient', {
+            identity_card_user: id,
+            names: name,
+            surnames: lastName,
+            email: email,
+            password: password,
+            password_confirm: confirmPassword,
+            phone: phone,
+            address: address
+        })
+          .then(response => {
+
+            console.log(response.data);
+          })
+          .catch(error => {
+            
+            console.error(error);
+          });
+      };
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
@@ -118,7 +140,6 @@ const Register = ({ navigation }) => {
         } else if (!specialCaracter(password)) {
             setErrorPassword(messages.PASSWORD_CARACTER);
         } else {
-            matchPassword(password, confirmPassword);
             setErrorPassword(null);
         }
         setPassword(password);
@@ -214,6 +235,7 @@ const Register = ({ navigation }) => {
         return true;
     };
     buttonAceptModal = () => {
+        handleRegistration();
         goToLogin();
     }
 
@@ -229,8 +251,8 @@ const Register = ({ navigation }) => {
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={styles.textTile}>REGISTRAR</Text>
-                    <Text style={styles.textDescription}>Ingresa tus datos para unirte a nuestra comunidad</Text>
+                    <Text style={commonStyles.textTile}>REGISTRAR</Text>
+                    <Text style={commonStyles.textDescription}>Ingresa tus datos para unirte a nuestra comunidad</Text>
                     <View style={styles.input}>
                         <Input style={styles.InputContainer}
                             label="Nombres"
@@ -304,6 +326,8 @@ const Register = ({ navigation }) => {
                             label="Dirección"
                             labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
                             placeholder="Tu dirección"
+                            value={address}
+                            onChangeText={setAddress}
                             leftIcon={
                                 <Icon name="map-pin" type="feather" size={25} color={colors.blue} />
                             }
@@ -380,7 +404,9 @@ const Register = ({ navigation }) => {
                         setModalVisible={setModalVisible}
                         onAccept={buttonAceptModal}
                         onCancel={buttonCancelModal}
-                        modalText="¡Registro Exitoso!"
+                        modalText="¿Esta seguro de guardar los datos?"
+                        showCancelButton={true}
+                        imageModal={require('../../assets/registered.png')}
                     />
                 </View>
             </ScrollView>
@@ -394,24 +420,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    textTile: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.blue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 30
-
-    },
-
-    textDescription: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: colors.lightBlue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 10
     },
 
     InputContainer: {

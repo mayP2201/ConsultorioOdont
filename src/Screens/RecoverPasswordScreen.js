@@ -26,9 +26,9 @@ const RecoverPassword = ({ navigation }) => {
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={styles.textTile}>RECUPERAR</Text>
+                    <Text style={commonStyles.textTile}>RECUPERAR</Text>
                     <Text style={styles.textTile1}>CONTRASEÑA</Text>
-                    <Text style={styles.textDescription}>Escribe tu correo electrónico para cambiar tu contraseña</Text>
+                    <Text style={commonStyles.textDescription}>Escribe tu correo electrónico para cambiar tu contraseña</Text>
                     <View style={styles.principalContainer}>
                         <View style={styles.input}>
                             <Input style={styles.InputContainer}

@@ -4,29 +4,22 @@ import Calendar from 'react-native-big-calendar'
 import Principal from '../components/Principal';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { colors, commonStyles } from '../common/globalStyle';
-import { Button } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import ModalC from '../components/ModalC';
 
 export const Schedule = ({ navigation }) => {
   const [selectDoctor, setSelectDoctor] = useState(null);
   const [isEvent, setIsEvent] = useState(false);
   const [event, setEvent] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(false);
+  const [selectedCell, setSelectedCell] = useState(null);
 
   const data = [
     { key: '1', value: 'Pablo Arias' },
     { key: '2', value: 'Lily Arias' },
     { key: '3', value: 'Maria Perez' },
   ]
-
-  const handleAppointmentPress = (event) => {
-    setEvent(event);
-    setModalVisible(true);
-  };
-
-  const doctorSelector = (selectDoctor) => {
-    setSelectDoctor(selectDoctor);
-  };
 
   const events = [
     {
@@ -39,16 +32,40 @@ export const Schedule = ({ navigation }) => {
     },
   ]
 
-  const colorEvent = () => {
-    setIsEvent(true);
+  const selectAppointment = (event) => {
+    setSelectedCell(event.start.toString());
+    // console.log(event.start.toString());
+    setModalVisible(true);
+  };
+
+  const doctorSelector = (selectDoctor) => {
+    setSelectDoctor(selectDoctor);
+  };
+
+  const eventCellStyleGetter = ({ event, start, end }) => {
+
+    if (selectedCell && start.toString() === selectedCell) {
+      return { backgroundColor: colors.blue };
+    }
+    return { backgroundColor: colors.green };
+  };
+
+  const buttonAceptModal = () => {
+    // setIsEvent(true);
     setModalVisible(!modalVisible);
   }
+
+  const buttonCancelModal = () => {
+    setModalVisible(!modalVisible);
+  }
+
+
   return (
     <Principal>
       <ScrollView>
         <View>
-          <Text style={styles.textTile}>CITAS</Text>
-          <Text style={styles.textDescription}>Selecciona una cita odontológica</Text>
+          <Text style={commonStyles.textTile}>CITAS</Text>
+          <Text style={commonStyles.textDescription}>Selecciona una cita odontológica</Text>
           <SelectList
             data={data}
             setSelected={doctorSelector}
@@ -71,41 +88,26 @@ export const Schedule = ({ navigation }) => {
           <View style={styles.calendar}>
             <Calendar
               events={events}
-              onPressEvent={handleAppointmentPress}
-              height={100}
+              onPressEvent={selectAppointment}
+              height={530}
               dayHeaderHighlightColor="lightblue"
-              eventCellStyle={isEvent ? { backgroundColor: colors.blue } : { backgroundColor: colors.green }}
+              eventCellStyle={eventCellStyleGetter}
+              hourRowHeight={50}
+              style={{ backgroundColor: 'white', borderWidth: 1, borderColor: 'gray' }}
+              headerContentStyle={{ paddingHorizontal: '5%', position: 'absolute' }}
+              mode="week"
+              weekStartsOn={1}
             />
           </View>
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}>
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text style={styles.modalText}>¿Esta seguro de tomar la cita? </Text>
-                  <View style={[commonStyles.containerButton, { flexDirection: 'row' }
-                  ]}>
-                    <Button
-                      title={"Cancelar"}
-                      buttonStyle={commonStyles.buttonStyle}
-                      titleStyle={[commonStyles.fontButton, { fontSize: 16 }]}
-                      containerStyle={styles.modalButton}
-                      onPress={() => setModalVisible(!modalVisible)}
-                    />
-                    <Button
-                      title={"Aceptar"}
-                      buttonStyle={[commonStyles.buttonStyle, { backgroundColor: colors.green }]}
-                      titleStyle={[commonStyles.fontButton, { fontSize: 16 }]}
-                      containerStyle={styles.modalButton}
-                      onPress={colorEvent}
-                    />
-                  </View>
-                </View>
-              </View>
-            </Modal>
-          </View>
+          <ModalC
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            onAccept={buttonAceptModal}
+            onCancel={buttonCancelModal}
+            modalText={`¿Estás seguro de tomar la cita con el doctor ${selectDoctor}? `}
+            showCancelButton={true}
+            imageModal={require('../../assets/question-mark.png')}
+          />
         </View>
       </ScrollView>
     </Principal>
@@ -113,15 +115,7 @@ export const Schedule = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-  textTile: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.blue,
-    textAlign: 'center',
-    maxWidth: '100%',
-    marginTop: 20
 
-  },
   boxStyles: {
     backgroundColor: colors.base,
     marginHorizontal: '10%',
@@ -136,23 +130,16 @@ const styles = StyleSheet.create({
     marginTop: '5%',
     marginBottom: '3%',
     borderColor: colors.blue,
-    color: colors.blue
+    color: colors.blue,
   },
   calendar: {
-    //backgroundColor: 'yellow',
-    height: 400,
-    width: 400,
-    borderColor: 'blue',
-    marginTop: '10%'
+    borderWidth: 1,
+    borderColor: colors.blue,
+    margin: '3%',
+    borderWidth: 2,
+    borderRadius: 15
   },
-  textDescription: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: colors.lightBlue,
-    textAlign: 'center',
-    maxWidth: '100%',
-    marginTop: '5%'
-  },
+
   centeredView: {
     flex: 1,
     justifyContent: 'center',

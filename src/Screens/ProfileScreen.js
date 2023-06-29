@@ -112,7 +112,7 @@ const Profile = () => {
     return (
         <Principal>
             <ScrollView>
-                <Text style={styles.textTile}>Perfil</Text>
+                <Text style={commonStyles.textTile}>Perfil</Text>
                 <View style={styles.container}>
                     <Image source={require('../../assets/o1.jpg')}
                         style={styles.img}
@@ -319,14 +319,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 100,
     },
-    textTile: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.blue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 30
-    },
+
     img: {
         width: 200,
         height: 200,

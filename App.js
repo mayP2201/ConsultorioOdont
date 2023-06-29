@@ -13,6 +13,7 @@ import { MenuNavForm } from "./src/Screens/MenuForm";
 import {Schedule} from "./src/Screens/ScheduleScreen";
 import Information from "./src/Screens/InformationScreen";
 import { Profile } from "./src/Screens/ProfileScreen";
+import Cancelar from "./src/Screens/CancelarScreen";
 
 
 const Stack = createStackNavigator();
@@ -46,6 +47,10 @@ const DrawerNav = () => {
         name='DrawerProfile'
         component={Profile}
         options={{ title: 'Perfil', headerShown: true, }} />
+        <Drawer.Screen
+        name='DrawerCancelar'
+        component={Cancelar}
+        options={{ title: 'Lista de citas', headerShown: true, }} />
       {/*<Drawer.Screen
         name='CerrarSesion'
         component={FinalizarSesion}

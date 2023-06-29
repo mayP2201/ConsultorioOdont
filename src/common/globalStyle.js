@@ -47,6 +47,24 @@ export const commonStyles = StyleSheet.create({
 
     errorStyle:{
         fontSize:11
-    }
+    },
+    textTile: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: colors.blue,
+        textAlign: 'center',
+        maxWidth: '100%',
+        marginTop: 30
+
+    },
+
+    textDescription: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: colors.lightBlue,
+        textAlign: 'center',
+        maxWidth: '100%',
+        marginTop: 10
+    },
   
 });

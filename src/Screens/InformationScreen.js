@@ -13,8 +13,8 @@ const Information = () => {
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={styles.textTile}>BIENVENIDO A ODONTOARIAS</Text>
-                    <Text style={styles.textDescription}>Presentación de nuestros profesionales</Text>
+                    <Text style={commonStyles.textTile}>BIENVENIDO A ODONTOARIAS</Text>
+                    <Text style={commonStyles.textDescription}>Presentación de nuestros profesionales</Text>
                     <View style={styles.containerP}>
                         <Card containerStyle={styles.cardContainer}>
                             <Card.Title style={styles.titleCard}>Dr. Pablo Arias</Card.Title>
@@ -78,23 +78,6 @@ const Information = () => {
 }
 
 const styles = StyleSheet.create({
-    textDescription: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: colors.lightBlue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 10
-    },
-    textTile: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.blue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 20
-
-    },
     cardContainer: {
         borderRadius: 15,
         borderColor: colors.lightBlue,
