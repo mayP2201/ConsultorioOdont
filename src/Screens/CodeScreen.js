@@ -4,19 +4,67 @@ import { colors, commonStyles } from '../common/globalStyle';
 import { Input } from '@rneui/base';
 import { Icon, Button } from '@rneui/themed';
 import { useState } from 'react';
-
+import { messages } from '../common/messages';
+import axios from 'axios';
+import ModalC from '../components/ModalC';
 
 const Code = ({ navigation }) => {
 
-    const [code, setCode] = useState();
+    const [code, setCode] = useState("");
+    const [codeError, setCodeError] = useState();
+    const [modalVisibleError, setModalVisibleError] = useState(false);
+
+    const handleVerifyCode = async () => {
+        try {
+            const response = await axios.post('https://endpointsco-production.up.railway.app/api/check-code',
+                { code }
+
+            );
+            verify();
+            navigation.navigate('NewPassword', { code });
+        } catch (error) {
+            setModalVisibleError(true);
+        }
+    };
+
+    const verify = () => {
+
+        if (code.trim() === "") {
+            setCodeError(messages.CODE_INCORRECT);
+        }
+        else {
+            setCodeError(null);
+        }
+        if (validate()) {
+            console.log("Guardando....");
+            setCodeError("");
+        }
+        else {
+            console.log("error");
+            setModalVisibleError(true);
+
+        }
+    };
+
+    const validate = () => {
+        if (!code) {
+            setCodeError(messages.CODE_INCORRECT);
+            return false;
+        }
+        return true;
+    };
+
+    buttonAceptError = () => {
+        setModalVisibleError(false);
+    }
 
     return (
         <Principal>
             <ScrollView>
                 <View>
                     <Text style={commonStyles.textTile}>RECUPERAR</Text>
-                    <Text style={commonStyles.textTile1}>CONTRASEÑA</Text>
-                    <Text style={styles.textDescription}>Escribe el código que hemos enviado a tu correo electrónico</Text>
+                    <Text style={styles.textTile1}>CONTRASEÑA</Text>
+                    <Text style={commonStyles.textDescription}>Escribe el código que hemos enviado a tu correo electrónico</Text>
                     <View style={styles.principalContainer}>
                         <View style={styles.input}>
                             <Input style={styles.InputContainer}
@@ -30,7 +78,9 @@ const Code = ({ navigation }) => {
                                 }
                                 keyboardType={"email-address"}
                                 maxLength={75}
-                            
+                                errorMessage={(codeError ? codeError : "")}
+                                errorStyle={commonStyles.errorStyle}
+
                             />
                         </View>
                         <View style={commonStyles.containerButton}>
@@ -39,7 +89,7 @@ const Code = ({ navigation }) => {
                                 buttonStyle={commonStyles.buttonStyle}
                                 containerStyle={commonStyles.introButton}
                                 titleStyle={commonStyles.fontButton}
-                                onPress={()=>navigation.navigate("NewPassword")}
+                                onPress={handleVerifyCode}
                             />
                         </View>
                         <View style={styles.textLog}>
@@ -55,6 +105,14 @@ const Code = ({ navigation }) => {
                                 <Text style={[styles.textLogin, { fontWeight: 'bold' }]}>¡Inicia sesión!</Text>
                             </TouchableOpacity>
                         </View>
+                        <ModalC
+                            modalVisible={modalVisibleError}
+                            setModalVisible={setModalVisibleError}
+                            onAccept={buttonAceptError}
+                            modalText="Verifica el código ingresado"
+                            showCancelButton={false}
+                            imageModal={require('../../assets/attention.png')}
+                        />
                     </View>
                 </View>
             </ScrollView>
@@ -69,16 +127,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    textTile: {
+    textTile1: {
         fontSize: 24,
         fontWeight: 'bold',
         color: colors.blue,
         textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: '15%'
+        maxWidth: '100%'
 
     },
-
     InputContainer: {
         //backgroundColor: 'pink',
         color: colors.blue,
@@ -96,7 +152,7 @@ const styles = StyleSheet.create({
         flex: 4,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:'15%'
+        marginBottom: '15%'
     },
     textLog: {
         marginTop: 30,
@@ -110,11 +166,11 @@ const styles = StyleSheet.create({
         color: colors.light,
         textDecorationLine: "underline",
     },
-    principalContainer:{
+    principalContainer: {
         //backgroundColor:'blue',
-        flex:1,
-        justifyContent:'center',
-        marginTop:'35%'
+        flex: 1,
+        justifyContent: 'center',
+        marginTop: '35%'
     }
 });
 

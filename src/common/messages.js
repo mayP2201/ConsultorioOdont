@@ -21,4 +21,6 @@ export const messages = {
     PASSWORD_MIN: "Ingrese al menos 8 caracteres",
     NAMES_NUMBER: "No debe contener números",
     NAMES_CARACTER: "No debe contener caracteres especiales",
+    ADDRESS_INCORRECT: "Escriba una dirección correcta",
+    CODE_INCORRECT: "Ingrese un código",
 }

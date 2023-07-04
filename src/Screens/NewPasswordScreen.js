@@ -6,17 +6,38 @@ import { Icon, Button } from '@rneui/themed';
 import { useState } from 'react';
 import { letter, number, specialCaracter } from '../services/validations';
 import { messages } from '../common/messages';
+import axios from 'axios';
+import ModalC from '../components/ModalC';
 
-
-const NewPassword = ({ navigation }) => {
-
-    const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
-    const [errorPassword, setErrorPassword] = useState();
-    const [errorConfirmPassword, setErrorConfirmPassword] = useState();
+const NewPassword = (props) => {
+    console.log(props)
+    const { navigation } = props;
+    const {code} = props.route.params;
+    //const { code, handleChangeCode } = useContext(CContext); // Uso de context
+    const [password, setPassword] = useState("");
+    const [errorPassword, setErrorPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [iconVisibility, setIconVisibility] = useState(true);
+    const [errorMathPassword, setErrorMathPassword] = useState("");
     const [iconVisibility1, setIconVisibility1] = useState(true);
+    const [modalVisibleError, setModalVisibleError] = useState(false);
 
+
+    const resetPassword = async () => {
+        try {
+          const response = await axios.post('https://endpointsco-production.up.railway.app/api/reset-password', { 
+            code: code,
+            password: password,
+            password_confirm: confirmPassword
+           });
+           verify();
+           navigation.navigate('Login');
+        } catch (error) {
+            setModalVisibleError(true);
+        }
+      };
+
+    //handleChangeCode("122343");  cambiar codigo 
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
@@ -41,18 +62,56 @@ const NewPassword = ({ navigation }) => {
     }
 
     const confirmOfPassword = (confirmPassword) => {
-        if (confirmPassword.length < 8) {
-            setErrorConfirmPassword(messages.PASSWORD_MIN);
-        } else if (!number(confirmPassword)) {
-            setErrorConfirmPassword(messages.PASSWORD_NUMBER);
-        } else if (!letter(confirmPassword)) {
-            setErrorConfirmPassword(messages.PASSWORD_LETTER);
-        } else if (!specialCaracter(confirmPassword)) {
-            setErrorConfirmPassword(messages.PASSWORD_CARACTER);
-        } else {
-            setErrorConfirmPassword(null);
-        }
         setConfirmPassword(confirmPassword);
+        matchPassword(password, confirmPassword);
+    }
+
+    const matchPassword = (value1, value2) => {
+        if (value1 == value2) {
+            setErrorMathPassword(null);
+        }
+        else {
+            setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
+        }
+    }
+
+    const verify = () => {
+
+        if (password.trim() === "" && confirmPassword.trim()) {
+            setErrorPassword(messages.PASSWORDS_NOTSECURITY);
+            setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
+        }
+        else {
+            setErrorPassword(null);
+            setErrorMathPassword(null);
+        }
+        if (validate()) {
+            console.log("Guardando....");
+            setErrorPassword("");
+            setErrorMathPassword("");
+   
+        }
+        else {
+            console.log("error");
+            setModalVisibleError(true);
+        }
+    };
+
+    const validate = () => {
+        
+        if (!password) {
+            setErrorPassword(messages.PASSWORDS_NOTSECURITY);
+            return false;
+        }
+        if (password != confirmPassword) {
+            setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
+            return false;
+        }
+        return true;
+    };
+
+    buttonAceptError = () => {
+        setModalVisibleError(false);
     }
 
     return (
@@ -74,15 +133,15 @@ const NewPassword = ({ navigation }) => {
                                 leftIcon={
                                     <Icon name="md-key-outline" type="ionicon" size={25} color={colors.blue} />
                                 }
-                                
+
                                 maxLength={75}
                                 rightIcon={
-                                <Icon
-                                    onPress={passwordVisibility}
-                                    type="feather"
-                                    name={iconVisibility ? "eye-off" : "eye"}
-                                />
-                            }
+                                    <Icon
+                                        onPress={passwordVisibility}
+                                        type="feather"
+                                        name={iconVisibility ? "eye-off" : "eye"}
+                                    />
+                                }
                                 errorMessage={(errorPassword ? errorPassword : "")}
                                 errorStyle={commonStyles.errorStyle}
 
@@ -96,17 +155,17 @@ const NewPassword = ({ navigation }) => {
                                 leftIcon={
                                     <Icon name="md-key-outline" type="ionicon" size={25} color={colors.blue} />
                                 }
-                                
+
                                 maxLength={75}
                                 secureTextEntry={iconVisibility1}
                                 rightIcon={
-                                <Icon
-                                    onPress={passwordVisibility1}
-                                    type="feather"
-                                    name={iconVisibility1 ? "eye-off" : "eye"}
-                                />
-                            }
-                                errorMessage={(errorConfirmPassword ? errorConfirmPassword : "")}
+                                    <Icon
+                                        onPress={passwordVisibility1}
+                                        type="feather"
+                                        name={iconVisibility1 ? "eye-off" : "eye"}
+                                    />
+                                }
+                                errorMessage={(errorMathPassword ? errorMathPassword : "")}
                                 errorStyle={commonStyles.errorStyle}
 
                             />
@@ -117,9 +176,17 @@ const NewPassword = ({ navigation }) => {
                                 buttonStyle={commonStyles.buttonStyle}
                                 containerStyle={commonStyles.introButton}
                                 titleStyle={commonStyles.fontButton}
-                                onPress={() => navigation.navigate("Login")}
+                                onPress={resetPassword}
                             />
                         </View>
+                        <ModalC
+                            modalVisible={modalVisibleError}
+                            setModalVisible={setModalVisibleError}
+                            onAccept={buttonAceptError}
+                            modalText="Verifica las contraseñas ingresadas"
+                            showCancelButton={false}
+                            imageModal={require('../../assets/attention.png')}
+                        />
                     </View>
                 </View>
             </ScrollView>
@@ -141,6 +208,7 @@ const styles = StyleSheet.create({
         color: colors.blue,
         textAlign: 'center',
         maxWidth: '100%',
+        backgroundColor: 'yellow'
     },
 
     InputContainer: {

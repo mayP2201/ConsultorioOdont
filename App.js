@@ -14,6 +14,8 @@ import {Schedule} from "./src/Screens/ScheduleScreen";
 import Information from "./src/Screens/InformationScreen";
 import { Profile } from "./src/Screens/ProfileScreen";
 import Cancelar from "./src/Screens/CancelarScreen";
+import { CStates } from "./src/context/CStates";
+import UpdatePassword from "./src/Screens/updatePasswordScreen";
 
 
 const Stack = createStackNavigator();
@@ -68,6 +70,8 @@ const RegistroNav = () => {
       <Stack.Screen name='RecoverPassword' component={RecoverPassword} options={{ headerShown: false }} />
       <Stack.Screen name='Code' component={Code} options={{ headerShown: false }} />
       <Stack.Screen name='NewPassword' component={NewPassword} options={{ headerShown: false }} />
+      <Stack.Screen name='UpdatePassword' component={UpdatePassword} options={{ headerShown: false }} />
+      <Stack.Screen name='Profile' component={Profile} options={{ headerShown: false }} />
     </StackLogin.Navigator>
   );
 }
@@ -94,10 +98,13 @@ const MenuNav = () => {
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <CStates>
+      <NavigationContainer>
       {/* {flag ? <DrawerNav /> : <RegistroNav />} */}
       <RegistroNav />
     </NavigationContainer>
+    </CStates>
+    
   );
 }
 

@@ -6,7 +6,6 @@ import { Icon, Button } from '@rneui/themed';
 import { letter, number, specialCaracter, validateEmail1, validateId, validateLastName, validateName, validatePhone } from '../services/validations';
 import { messages } from '../common/messages';
 import { useState } from 'react';
-import { Alert } from 'react-native';
 import axios from 'axios';
 import ModalC from '../components/ModalC';
 
@@ -29,7 +28,9 @@ const Register = ({ navigation }) => {
     const [iconVisibility1, setIconVisibility1] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [address, setAddress] = useState("");
-    
+    const [errorAddress, setErrorAddress] = useState("");
+    const [modalVisibleError, setModalVisibleError] = useState(false);
+
 
     const handleRegistration = () => {
         axios.post('https://endpointsco-production.up.railway.app/api/register/patient', {
@@ -42,15 +43,15 @@ const Register = ({ navigation }) => {
             phone: phone,
             address: address
         })
-          .then(response => {
+            .then(response => {
 
-            console.log(response.data);
-          })
-          .catch(error => {
-            
-            console.error(error);
-          });
-      };
+                console.log(response.data);
+            })
+            .catch(error => {
+
+                console.error(error);
+            });
+    };
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
@@ -158,21 +159,32 @@ const Register = ({ navigation }) => {
             setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
         }
     }
+    const verifyAdrees = (address) => {
+        if (address.length <= 3) {
+            setErrorAddress(messages.INCORRECT_ADDRESS);
+        }
+        else {
+            setErrorAddress(null);
+        }
+        setAddress(address);
+    }
 
     const register = () => {
 
         if (name.trim() === "" && lastName.trim() === ""
             && id.trim() === "" && email.trim() === ""
             && phone.trim() === "" && password.trim() === ""
-            && confirmPassword.trim() === ""
+            && confirmPassword.trim() === "" && address.trim() === ""
         ) {
             setErrorName(messages.INCORRECT_NAME);
             setErrorLastName(messages.INCORRECT_LASTNAME);
+            setErrorId(messages.INCORRECT_ID_ERROR);
             setErrorId(messages.INCORRECT_ID_ERROR);
             setErrorEmail(messages.EMAIL_INCORRECT);
             setErrorPhone(messages.PHONE_INCORRECT);
             setErrorPassword(messages.PASSWORDS_NOTSECURITY);
             setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
+            setErrorAddress(messages.ADDRESS_INCORRECT);
         }
         else {
             setErrorName(null);
@@ -182,20 +194,23 @@ const Register = ({ navigation }) => {
             setErrorPhone(null);
             setErrorPassword(null);
             setErrorMathPassword(null);
+            setErrorAddress(null);
         }
         if (validate()) {
             console.log("Guardando....");
             setErrorName("");
             setErrorLastName("");
             setErrorEmail("");
+            setErrorId("");
             setErrorPhone("");
             setErrorPassword("");
             setErrorMathPassword("");
+            setErrorAddress("")
             setModalVisible(true);
         }
         else {
             console.log("error");
-            Alert.alert("Verifique los datos");
+            setModalVisibleError(true);
 
         }
     };
@@ -226,6 +241,10 @@ const Register = ({ navigation }) => {
             setErrorPassword(messages.PASSWORDS_NOTSECURITY);
             return false;
         }
+        if (!address) {
+            setErrorAddress(messages.PASSWORDS_NOTSECURITY);
+            return false;
+        }
 
         if (password != confirmPassword) {
             setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
@@ -234,7 +253,7 @@ const Register = ({ navigation }) => {
 
         return true;
     };
-    buttonAceptModal = () => {
+    buttonAcept = () => {
         handleRegistration();
         goToLogin();
     }
@@ -246,6 +265,10 @@ const Register = ({ navigation }) => {
         navigation.navigate("Login");
         console.log("Ir a Login");
     };
+
+    const buttonAceptModalError = () => {
+        setModalVisibleError(false);
+    }
 
     return (
         <Principal>
@@ -327,11 +350,13 @@ const Register = ({ navigation }) => {
                             labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
                             placeholder="Tu dirección"
                             value={address}
-                            onChangeText={setAddress}
+                            onChangeText={verifyAdrees}
                             leftIcon={
                                 <Icon name="map-pin" type="feather" size={25} color={colors.blue} />
                             }
                             maxLength={75}
+                            errorMessage={(errorAddress ? errorAddress : "")}
+                            errorStyle={commonStyles.errorStyle}
                         />
                         <Input style={styles.InputContainer}
                             label="Contraseña"
@@ -402,11 +427,19 @@ const Register = ({ navigation }) => {
                     <ModalC
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
-                        onAccept={buttonAceptModal}
+                        onAccept={buttonAcept}
                         onCancel={buttonCancelModal}
                         modalText="¿Esta seguro de guardar los datos?"
                         showCancelButton={true}
                         imageModal={require('../../assets/registered.png')}
+                    />
+                    <ModalC
+                        modalVisible={modalVisibleError}
+                        setModalVisible={setModalVisibleError}
+                        onAccept={buttonAceptModalError}
+                        modalText="Verifique los datos de registro"
+                        showCancelButton={false}
+                        imageModal={require('../../assets/attention.png')}
                     />
                 </View>
             </ScrollView>

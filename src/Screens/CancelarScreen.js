@@ -7,9 +7,11 @@ import { commonStyles } from '../common/globalStyle';
 import { Row, Table } from 'react-native-table-component';
 import { Button } from 'react-native-elements';
 
+
 const Cancelar = () => {
     const tableHead = [ 'Fecha','Hora', 'Dentista',  'Cancelar'];
     const tableData = [ "12-12-2023",'10:00',"Lilian Arias",  <Button title='Cancelar'></Button>];
+
     return (
         <Principal>
             <ScrollView>
@@ -23,8 +25,10 @@ const Cancelar = () => {
                             onPress={(rowIndex) => handleCancelAppointment(rowIndex)}
                             
                         />
-
+                        
                     </Table>
+                  
+
                 </View>
             </ScrollView>
         </Principal>

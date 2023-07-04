@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import Principal from '../components/Principal';
 import { Image } from 'react-native-elements';
 import { colors, commonStyles } from '../common/globalStyle';
 import { Input } from '@rneui/base';
-import { Icon, Button } from '@rneui/themed';
+import { Icon, Button, Avatar } from '@rneui/themed';
 import { ScrollView } from 'react-native-gesture-handler';
 import { validateEmail1, validateLastName, validateName, validatePhone } from '../services/validations';
 import { messages } from '../common/messages';
+import { useContext } from 'react';
+import { CContext } from '../context/CContext';
+import { useEffect } from 'react';
+import axios from 'axios';
+import * as ImagePicker from 'expo-image-picker';
 
 
-const Profile = () => {
+
+
+const Profile = ({ navigation }) => {
     const [name, setName] = useState();
     const [errorName, setErrorName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -19,15 +26,65 @@ const Profile = () => {
     const [errorEmail, setErrorEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [errorPhone, setErrorPhone] = useState("");
-    const [password, setPassword] = useState("");
-    const [errorPassword, setErrorPassword] = useState("");
-    const [confirmPassword, setconfirmPassword] = useState("");
-    const [errorMathPassword, setErrorMathPassword] = useState("");
     const [id, setId] = useState("");
     const [errorId, setErrorId] = useState("");
-    const [iconVisibility, setIconVisibility] = useState(true);
-    const [iconVisibility1, setIconVisibility1] = useState(true);
+    const [address, setAddress] = useState("");
+    const [errorAddress, setErrorAddress] = useState("");
+    const [errorImage, setErrorImage] = useState("");
     const [viewName, setViewName] = useState(false);
+    const [editable, setEditable] = useState(false);
+    const { token } = useContext(CContext);
+    const [userData, setUserData] = useState([]);
+    const [newAvatar, setNewAvatar] = useState("");
+    const [imageName, setImageName] = useState("");
+
+    const getUserData = async () => {
+        try {
+            const response = await axios.get(
+                'https://endpointsco-production.up.railway.app/api/get-user',
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+            setUserData(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getUserData();
+    }, []);
+
+    useEffect(() => {
+        viewData(userData);
+    }, [userData]);
+
+    const updateUserData = async () => {
+        try {
+            const response = await axios.post(
+                'https://endpointsco-production.up.railway.app/api/update-user',
+                {
+                    names: name,
+                    surnames: lastName,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    image: imageName,
+                    profesional_descrption: null,
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+            console.log(response.data);
+            verify();
+            navigation.navigate("Horario");
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
@@ -76,54 +133,183 @@ const Profile = () => {
         }
         setPhone(phone);
     }
-    const verifyPassword = (password) => {
-        if (password.length < 8) {
-            setErrorPassword(messages.PASSWORD_MIN);
-        } else if (!number(password)) {
-            setErrorPassword(messages.PASSWORD_NUMBER);
-        } else if (!letter(password)) {
-            setErrorPassword(messages.PASSWORD_LETTER);
-        } else if (!specialCaracter(password)) {
-            setErrorPassword(messages.PASSWORD_CARACTER);
-        } else {
-            setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
-            setErrorPassword(null);
 
-        }
-        setPassword(password);
+
+    editBoton = () => {
+        setViewName(!viewName);
+        setEditable(!editable);
     }
 
-    const confirmOfPassword = (confirmPassword) => {
-        setconfirmPassword(confirmPassword);
-        matchPassword(password, confirmPassword);
-    }
-
-    const matchPassword = (value1, value2) => {
-        if (value1 == value2) {
-            setErrorMathPassword(null);
+    const verifyAdrees = (address) => {
+        if (address.length <= 3) {
+            setErrorAddress(messages.INCORRECT_ADDRESS);
         }
         else {
-            setErrorMathPassword(messages.PASSWORDS_DONT_MATCH);
+            setErrorAddress(null);
         }
+        setAddress(address);
     }
-    editBoton = () =>{
-        setViewName(!viewName);
+    const verify = () => {
+
+        if (name.trim() === "" && lastName.trim() === ""
+            && email.trim() === ""
+            && phone.trim() === "" && address.trim() === ""
+        ) {
+            setErrorName(messages.INCORRECT_NAME);
+            setErrorLastName(messages.INCORRECT_LASTNAME);
+            setErrorEmail(messages.EMAIL_INCORRECT);
+            setErrorPhone(messages.PHONE_INCORRECT);
+            setErrorAddress(messages.ADDRESS_INCORRECT);
+            setErrorImage(messages.NOT_LOAD_IMAGE);
+        }
+        else {
+            setErrorName(null);
+            setErrorLastName(null);
+            setErrorId(null);
+            setErrorEmail(null);
+            setErrorPhone(null);
+            setErrorAddress(null);
+            setErrorImage(null);
+        }
+        if (validate()) {
+            console.log("Guardando....");
+            setErrorName("");
+            setErrorLastName("");
+            setErrorEmail("");
+            setErrorPhone("");
+            setErrorAddress("")
+            setErrorImage("")
+            //setModalVisible(true);
+        }
+        else {
+            console.log("error");
+            //setModalVisibleError(true);
+
+        }
+    };
+
+    const validate = () => {
+        if (!name) {
+            setErrorName(messages.INCORRECT_NAME);
+            return false;
+        }
+        if (!lastName) {
+            setErrorLastName(messages.INCORRECT_LASTNAME);
+            return false;
+        }
+        if (!id) {
+            setErrorId(messages.INCORRECT_ID_ERROR);
+            return false;
+        }
+        if (!email) {
+            setErrorEmail(messages.EMAIL_INCORRECT);
+            return false;
+        }
+        if (!phone) {
+            setErrorPhone(messages.PHONE_INCORRECT);
+            return false;
+        }
+        if (!address) {
+            setErrorAddress(messages.PASSWORDS_NOTSECURITY);
+            return false;
+        }
+        if (!newAvatar) {
+            setErrorImage(messages.NOT_LOAD_IMAGE);
+            return false;
+        }
+
+        return true
+    }
+
+    viewData = (userData) => {
+        console.log("-----datos", userData)
+        setName(userData.names);
+        setLastName(userData.surnames);
+        setId(userData.identity_card_user);
+        setEmail(userData.email);
+        setPhone(userData.phone);
+        setAddress(userData.address);
+        //setNewAvatar(userData.image);
+
+    }
+
+    const selectImage = async () => {
+        try {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            if (result.canceled) {
+                throw new Error("La cámara fue cancelada.");
+            } if (!result.canceled) {
+                setNewAvatar(result.assets[0].uri);
+                const imageUri = result.assets[0].uri;
+                const fileName = imageUri.split('/').pop().split('.')[0];
+                const userImageName = `${fileName}.png`;
+                setImageName(userImageName);
+                console.log("nombre imagen",userImageName);
+            }
+        } catch (error) { console.log("Error al cargar la imagen", error); }
+    };
+
+    const getImgLogo = (imgUrl) => {
+        if (imgUrl.length > 0) {
+            return { uri: imgUrl }
+        } else {
+            return require("../../assets/avatar.png");
+        }
     }
     return (
         <Principal>
             <ScrollView>
                 <Text style={commonStyles.textTile}>Perfil</Text>
                 <View style={styles.container}>
-                    <Image source={require('../../assets/o1.jpg')}
-                        style={styles.img}
-                    />
+                    {
+                        viewName ? (
+                            <Image
+                                style={styles.img}
+                                source={getImgLogo(newAvatar)}
+                            />
+                        ) : (
+                            <Image
+                                style={styles.img}
+                                source={getImgLogo(newAvatar)}
+                            />
+                        )
+                    }
+                    <View style={styles.containerBtnCharge}>
+                        {
+                            viewName ? (
+                                <TouchableOpacity activeOpacity={0.5}
+                                    style={styles.btnCharge}
+                                    onPress={selectImage}
+                                >
+                                    <Avatar
+                                        size={64}
+                                        icon={{ name: "camera", type: "feather", color: colors.payneGray, size: 50 }}
+                                        containerStyle={{ marginTop: -190, backgroundColor: "transparent", marginLeft: -2.5 }}
+                                        onPress={selectImage}
+                                    />
+                                </TouchableOpacity>
+                            ) : <></>
+                        }
+                        {
+                            setNewAvatar == '' &&
+                            <Text style={[commonStyles.errorInput, { marginTop: -10, marginBottom: 20 }]}>
+                                {errorImage}
+                            </Text>
+                        }
+                    </View>
                 </View>
                 <View style={[commonStyles.containerButton, {
                     justifyContent: 'flex-start', flexDirection: 'row',
-                    alignItems: 'center', marginRight:'5%', marginLeft:'20%'
+                    alignItems: 'center', marginRight: '5%', marginLeft: '20%'
                 }]}>
-                    <View style={{justifyContent:'center',alignItems:'center',flex:1}}>
-                        <Text style={styles.nameText}>Pablo Ariel Arias Arias</Text>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                        <Text style={styles.nameText}>{userData.names} {userData.surnames}</Text>
                     </View>
                     <View>
                         <Icon
@@ -137,41 +323,43 @@ const Profile = () => {
                     </View>
                 </View>
                 <View style={styles.input}>
-                {
-                    viewName ? <Input style={styles.InputContainer}
-                        label="Nombres"
-                        labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
-                        placeholder="Tus nombres"
-                        value={name}
-                        onChangeText={verifyName}
-                        leftIcon={
-                            <Icon name="user" type="antdesign" size={30} color={colors.blue} />
-                        }
-                        maxLength={75}
-                        errorMessage={(errorName ? errorName : "")}
-                        errorStyle={commonStyles.errorStyle}
-                    />:<></>
-                }
-                    
-                {
-                    viewName ? <Input style={styles.InputContainer}
-                        label="Apellidos"
-                        labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
-                        placeholder="Tus apellidos"
-                        leftIcon={
-                            <Icon name="user" type="antdesign" size={30} color={colors.blue} />
-                        }
-                        maxLength={25}
-                        value={lastName}
-                        onChangeText={verifyLastName}
-                        errorMessage={(errorLastName ? errorLastName : "")}
-                        errorStyle={commonStyles.errorStyle}
-                    />:<></>
-                }
+                    {
+                        viewName ? <Input style={styles.InputContainer}
+                            label="Nombres"
+                            labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
+                            placeholder="Tus nombres"
+                            value={name}
+                            onChangeText={verifyName}
+                            leftIcon={
+                                <Icon name="user" type="antdesign" size={30} color={colors.blue} />
+                            }
+                            maxLength={75}
+                            errorMessage={(errorName ? errorName : "")}
+                            errorStyle={commonStyles.errorStyle}
+                        /> : <></>
+                    }
+
+                    {
+                        viewName ? <Input style={styles.InputContainer}
+                            label="Apellidos"
+                            labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
+                            placeholder="Tus apellidos"
+                            leftIcon={
+                                <Icon name="user" type="antdesign" size={30} color={colors.blue} />
+                            }
+                            maxLength={25}
+                            value={lastName}
+                            onChangeText={verifyLastName}
+                            errorMessage={(errorLastName ? errorLastName : "")}
+                            errorStyle={commonStyles.errorStyle}
+                        /> : <></>
+                    }
                     <Input style={styles.InputContainer}
                         label="Cédula"
                         labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
                         placeholder="Tu cédula"
+                        value={id}
+                        onChangeText={setId}
                         leftIcon={
                             <Icon name="idcard" type="antdesign" size={30} color={colors.blue} />
                         }
@@ -192,6 +380,7 @@ const Profile = () => {
                         }
                         keyboardType={"email-address"}
                         maxLength={75}
+                        disabled={!editable}
                         errorMessage={(errorEmail ? errorEmail : "")}
                         errorStyle={commonStyles.errorStyle}
                     />
@@ -206,6 +395,7 @@ const Profile = () => {
                         }
                         keyboardType={"numeric"}
                         maxLength={10}
+                        disabled={!editable}
                         errorMessage={(errorPhone ? errorPhone : "")}
                         errorStyle={commonStyles.errorStyle}
                     />
@@ -213,92 +403,37 @@ const Profile = () => {
                         label="Dirección"
                         labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
                         placeholder="Tu dirección"
+                        disabled={!editable}
+                        value={address}
+                        onChangeText={verifyAdrees}
                         leftIcon={
                             <Icon name="map-pin" type="feather" size={25} color={colors.blue} />
                         }
                         maxLength={75}
+                        errorMessage={(errorAddress ? errorAddress : "")}
+                        errorStyle={commonStyles.errorStyle}
                     />
-                    { viewName ? <Text style={styles.changePass}>Cambio de contraseña</Text> : <></>}
+                </View>
+                <View style={styles.textLog}>
                     {
-                    viewName ? <Input style={styles.InputContainer}
-                        label="Contraseña antigua"
-                        labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
-                        placeholder="Tu contraseña"
-                        value={confirmPassword}
-                        onChangeText={confirmOfPassword}
-                        leftIcon={
-                            <Icon name="md-key-outline" type="ionicon" size={30} color={colors.blue} />
-                        }
-                        maxLength={75}
-                        secureTextEntry={iconVisibility1}
-                        rightIcon={
-                            <Icon
-                                onPress={passwordVisibility1}
-                                type="feather"
-                                name={iconVisibility1 ? "eye-off" : "eye"}
-                            />
-                        }
-                        errorMessage={(errorMathPassword ? errorMathPassword : "")}
-                        errorStyle={commonStyles.errorStyle}
-                    />:<></>
-                    }
-                    {
-                    viewName ? <Input style={styles.InputContainer}
-                        label="Nueva contraseña"
-                        labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
-                        placeholder="Tu contraseña"
-                        value={password}
-                        onChangeText={verifyPassword}
-                        leftIcon={
-                            <Icon name="md-key-outline" type="ionicon" size={30} color={colors.blue} />
-                        }
-                        secureTextEntry={iconVisibility}
-                        maxLength={75}
-                        rightIcon={
-                            <Icon
-                                onPress={passwordVisibility}
-                                type="feather"
-                                name={iconVisibility ? "eye-off" : "eye"}
-                            />
-                        }
-                        errorMessage={(errorPassword ? errorPassword : "")}
-                        errorStyle={commonStyles.errorStyle}
-                    />:<></>
-                    }
-                    {
-                    viewName ? <Input style={styles.InputContainer}
-                        label="Confirmar contraseña"
-                        labelStyle={[commonStyles.titleInput, { marginLeft: 0 }]}
-                        placeholder="Tu contraseña"
-                        value={confirmPassword}
-                        onChangeText={confirmOfPassword}
-                        leftIcon={
-                            <Icon name="md-key-outline" type="ionicon" size={30} color={colors.blue} />
-                        }
-                        maxLength={75}
-                        secureTextEntry={iconVisibility1}
-                        rightIcon={
-                            <Icon
-                                onPress={passwordVisibility1}
-                                type="feather"
-                                name={iconVisibility1 ? "eye-off" : "eye"}
-                            />
-                        }
-                        errorMessage={(errorMathPassword ? errorMathPassword : "")}
-                        errorStyle={commonStyles.errorStyle}
-                    />:<></>
+                        viewName ? <TouchableOpacity
+                            onPress={() => navigation.navigate("UpdatePassword")}
+                        >
+                            <Text style={[styles.textLogin, { fontWeight: 'bold' }]}>¡Actualiza tu contraseña aquí!</Text>
+                        </TouchableOpacity> : <></>
                     }
                 </View>
-                <View style={[commonStyles.containerButton,{marginBottom:'5%'}]}>
-                       {
+                <View style={[commonStyles.containerButton, { marginBottom: '5%' }]}>
+                    {
                         viewName ? <Button
                             title={"Guardar"}
                             buttonStyle={{ backgroundColor: colors.violet }}
                             containerStyle={commonStyles.introButton}
                             titleStyle={commonStyles.fontButton}
-                        />:<></>
-                       } 
-                    </View>
+                            onPress={updateUserData}
+                        /> : <></>
+                    }
+                </View>
             </ScrollView>
         </Principal>
     );
@@ -349,20 +484,36 @@ const styles = StyleSheet.create({
         marginTop: 10,
         padding: 25,
     },
+    changePass: {
+        //backgroundColor:'yellow',
+        fontSize: 16,
+        margin: '4%',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: colors.violet
+    },
     textLog: {
-        marginTop: 30,
         //backgroundColor:'red',
         marginBottom: 20,
     },
-    changePass:{
-        //backgroundColor:'yellow',
+    textLogin: {
+        textAlign: "center",
         fontSize: 16,
-        margin:'4%',
-        textAlign:'center',
-        fontWeight:'bold',
-        color: colors.violet
-    }
-
+        fontStyle: "italic",
+        color: colors.violet,
+        textDecorationLine: "underline",
+    },
+    containerBtnCharge: {
+        flex: 1,
+        backgroundColor: colors.white,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    btnCharge: {
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "transparent",
+    },
 })
 
 export { Profile };

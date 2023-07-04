@@ -6,11 +6,16 @@ import { Icon, Button } from '@rneui/themed';
 import { validateEmail1 } from '../services/validations';
 import { messages } from '../common/messages';
 import { useState } from 'react';
+import axios from 'axios';
+import ModalC from '../components/ModalC';
 
 const RecoverPassword = ({ navigation }) => {
 
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState("");
     const [errorEmail, setErrorEmail] = useState();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisibleError, setModalVisibleError] = useState(false);
+    
 
     const verifyEmail = (email) => {
         if (validateEmail1(email)) {
@@ -21,6 +26,54 @@ const RecoverPassword = ({ navigation }) => {
         }
         setEmail(email);
     }
+
+    const verify = () => {
+
+        if (email.trim() === "") {
+            setErrorEmail(messages.EMAIL_INCORRECT);
+        }
+        else {
+            setEmail(null);
+        }
+        if (validate()) {
+            console.log("Guardando....");
+            setErrorEmail("");
+            setModalVisible(true);
+            
+        }
+        else {
+            console.log("error");
+            setModalVisibleError(true);
+
+        }
+    };
+
+    const validate = () => {
+        if (!email) {
+            setErrorEmail(messages.EMAIL_INCORRECT);
+            return false;
+        }
+        return true;
+    };
+
+    buttonAcept = () => {
+        navigation.navigate('Code');
+    }
+
+    buttonAceptError = () => {
+        setModalVisibleError(false);
+    }
+    const handleForgotPassword = async () => {
+        try {
+            const response = await axios.post('https://endpointsco-production.up.railway.app/api/forgot-password',
+                { email }
+            );
+            verify();
+            
+        } catch (error) {
+            setModalVisibleError(true);
+        }
+    };
 
     return (
         <Principal>
@@ -52,7 +105,7 @@ const RecoverPassword = ({ navigation }) => {
                                 buttonStyle={commonStyles.buttonStyle}
                                 containerStyle={commonStyles.introButton}
                                 titleStyle={commonStyles.fontButton}
-                                onPress={() => navigation.navigate("Code")}
+                                onPress={handleForgotPassword}
                             />
                             <Button
                                 title={"Ingresar"}
@@ -75,6 +128,22 @@ const RecoverPassword = ({ navigation }) => {
                                 <Text style={[styles.textLogin, { fontWeight: 'bold' }]}>¡Inicia sesión!</Text>
                             </TouchableOpacity>
                         </View>
+                        <ModalC
+                            modalVisible={modalVisible}
+                            setModalVisible={setModalVisible}
+                            onAccept={buttonAcept}
+                            modalText="El código se envió con exito, por favor revisa tu correo"
+                            showCancelButton={false}
+                            imageModal={require('../../assets/mensaje.png')}
+                        />
+                        <ModalC
+                            modalVisible={modalVisibleError}
+                            setModalVisible={setModalVisibleError}
+                            onAccept={buttonAceptError}
+                            modalText="Verifica el correo ingresado"
+                            showCancelButton={false}
+                            imageModal={require('../../assets/attention.png')}
+                        />
                     </View>
                 </View>
             </ScrollView>
@@ -89,34 +158,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    textTile: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: colors.blue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: '15%'
-
-    },
     textTile1: {
         fontSize: 24,
         fontWeight: 'bold',
         color: colors.blue,
         textAlign: 'center',
         maxWidth: '100%',
-        
-
-    },
-
-    textDescription: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: colors.lightBlue,
-        textAlign: 'center',
-        maxWidth: '100%',
-        marginTop: 10
-
-
     },
     InputContainer: {
         //backgroundColor: 'pink',
@@ -135,7 +182,7 @@ const styles = StyleSheet.create({
         flex: 4,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:'15%'
+        marginBottom: '15%'
     },
     textLog: {
         marginTop: 30,
@@ -149,11 +196,11 @@ const styles = StyleSheet.create({
         color: colors.light,
         textDecorationLine: "underline",
     },
-    principalContainer:{
+    principalContainer: {
         //backgroundColor:'blue',
-        flex:1,
-        justifyContent:'center',
-        marginTop:'35%'
+        flex: 1,
+        justifyContent: 'center',
+        marginTop: '35%'
     }
 });
 

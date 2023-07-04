@@ -9,6 +9,8 @@ import { messages } from '../common/messages';
 import ModalC from '../components/ModalC';
 import { Icon } from 'react-native-elements';
 import axios from 'axios';
+import { CContext } from '../context/CContext';
+import { useContext } from 'react';
 
 const Login = ({ navigation }) => {
 
@@ -19,26 +21,25 @@ const Login = ({ navigation }) => {
     const [iconVisibility, setIconVisibility] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [data, setData] = useState([]);
-
+    const { token, handleChangeToken } = useContext(CContext);
 
     const handleLogin = () => {
-        axios.post('https://endpointsco-production.up.railway.app/api/login', {
+      axios
+        .post('https://endpointsco-production.up.railway.app/api/login', {
           email: email,
           password: password
-          
-        })      
+        })
         .then(response => {
-          console.log(response.data);
-          setData(response.data);
+          console.log(response.data.token);
+          const tok = response.data.token;
+          handleChangeToken(tok);
           goToMenu();
-          
         })
         .catch(error => {
-          //console.error(error);
           setModalVisible(true);
         });
-      };
-
+    };
+    
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
@@ -78,6 +79,8 @@ const Login = ({ navigation }) => {
     buttonAceptModal = () => {
         setModalVisible(!modalVisible);
     }
+
+    
 
     return (
         <Principal>
@@ -161,7 +164,7 @@ const Login = ({ navigation }) => {
                     modalVisible={modalVisible}
                     setModalVisible={setModalVisible}
                     onAccept={buttonAceptModal}
-                    modalText="Credenciales incorrectas"
+                    modalText="Verifique las credenciales ingresadas"
                     showCancelButton={false}
                     imageModal={require('../../assets/attention.png')}
                 />
