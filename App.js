@@ -10,19 +10,80 @@ import NewPassword from './src/Screens/NewPasswordScreen';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MenuNavForm } from "./src/Screens/MenuForm";
-import {Schedule} from "./src/Screens/ScheduleScreen";
+import { Schedule } from "./src/Screens/ScheduleScreen";
 import Information from "./src/Screens/InformationScreen";
 import { Profile } from "./src/Screens/ProfileScreen";
 import Cancelar from "./src/Screens/CancelarScreen";
 import { CStates } from "./src/context/CStates";
 import UpdatePassword from "./src/Screens/updatePasswordScreen";
-
+import InformationAppointment from "./src/Screens/InformationAppointmentScreen";
+import { useContext } from "react";
+import { CContext } from "./src/context/CContext";
+import React, { useState } from 'react';
 
 const Stack = createStackNavigator();
 const StackLogin = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-////////////////////////// ----------------------- Navegación Drawer -------------------------------------------
+//////////////////////// ----------------------- Navegación Drawer -------------------------------------------
+{/*const DrawerNav = () => {
+  const { userDataContext } = useContext(CContext);
+  console.log("valor del id",userDataContext.rol_id);
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        drawerStyle: {
+          backgroundColor: '#E1F8EE',
+          width: 240,
+        },
+      }}
+    >
+      
+      {
+
+        userDataContext.rol_id == 2 && (
+          <>
+            <Drawer.Screen
+              name='DrawerInformationApointment'
+              component={InformationAppointment}
+              options={{ title: 'citas agendadas', headerShown: true, }} />
+          </>
+        )}
+     
+      {
+        userDataContext.rol_id == 3 && (
+          <>
+            <Drawer.Screen
+              name='  '
+              component={Schedule}
+              options={{ title: 'Horario', headerShown: true, drawerItemStyle: { display: 'none' } }} />
+            <Drawer.Screen
+              name='DrawerHorario'
+              component={Schedule}
+              options={{ title: 'Citas', headerShown: true, }} />
+            <Drawer.Screen
+              name='DrawerInfo'
+              component={Information}
+              options={{ title: 'Informacion', headerShown: true, }} />
+            <Drawer.Screen
+              name='DrawerCancelar'
+              component={Cancelar}
+              options={{ title: 'Lista de citas', headerShown: true, }} />
+          </>
+        )}
+      <Drawer.Screen
+        name='DrawerProfile'
+        component={Profile}
+        options={{ title: 'Perfil', headerShown: true, }} />
+
+      <Drawer.Screen
+        name='CerrarSesion'
+        component={FinalizarSesion}
+        options={{ title: 'Cerrar Sesión', headerShown: true, }} /> 
+    </Drawer.Navigator>
+  );
+}
+*/}
 const DrawerNav = () => {
   return (
     <Drawer.Navigator
@@ -60,7 +121,6 @@ const DrawerNav = () => {
     </Drawer.Navigator>
   );
 }
-
 const RegistroNav = () => {
   return (
     <StackLogin.Navigator>
@@ -71,7 +131,6 @@ const RegistroNav = () => {
       <Stack.Screen name='Code' component={Code} options={{ headerShown: false }} />
       <Stack.Screen name='NewPassword' component={NewPassword} options={{ headerShown: false }} />
       <Stack.Screen name='UpdatePassword' component={UpdatePassword} options={{ headerShown: false }} />
-      <Stack.Screen name='Profile' component={Profile} options={{ headerShown: false }} />
     </StackLogin.Navigator>
   );
 }
@@ -100,11 +159,11 @@ export default function App() {
   return (
     <CStates>
       <NavigationContainer>
-      {/* {flag ? <DrawerNav /> : <RegistroNav />} */}
-      <RegistroNav />
-    </NavigationContainer>
+        {/* {flag ? <DrawerNav /> : <RegistroNav />} */}
+        <RegistroNav />
+      </NavigationContainer>
     </CStates>
-    
+
   );
 }
 

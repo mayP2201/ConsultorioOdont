@@ -1,4 +1,4 @@
-import { LOAD_TOKEN } from "./CTypes"
+import { LOAD_TOKEN, LOAD_USERDATACONTEXT } from "./CTypes"
 
 
 export const CReducer = (state, action) => {
@@ -8,6 +8,12 @@ export const CReducer = (state, action) => {
             return {
                 ...state,
                 token: payload,
+            };
+        }
+        case LOAD_USERDATACONTEXT: {
+            return {
+                ...state,
+                userDataContext: payload,
             };
         }
         default:

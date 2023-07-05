@@ -13,9 +13,7 @@ import { CContext } from '../context/CContext';
 import { useEffect } from 'react';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
-
-
-
+import * as DocumentPicker from 'expo-document-picker';
 
 const Profile = ({ navigation }) => {
     const [name, setName] = useState();
@@ -37,6 +35,8 @@ const Profile = ({ navigation }) => {
     const [userData, setUserData] = useState([]);
     const [newAvatar, setNewAvatar] = useState("");
     const [imageName, setImageName] = useState("");
+    const formData = new FormData();
+    const { userDataContext , handleChangeuserDataContext } = useContext(CContext);
 
     const getUserData = async () => {
         try {
@@ -52,15 +52,16 @@ const Profile = ({ navigation }) => {
             console.log(error);
         }
     };
-
     useEffect(() => {
         getUserData();
+        handleChangeuserDataContext(userData);
     }, []);
 
     useEffect(() => {
         viewData(userData);
     }, [userData]);
 
+    
     const updateUserData = async () => {
         try {
             const response = await axios.post(
@@ -71,8 +72,8 @@ const Profile = ({ navigation }) => {
                     email: email,
                     phone: phone,
                     address: address,
-                    image: imageName,
-                    profesional_descrption: null,
+                    //image: imageName,
+                    profesional_descrption: "",
                 },
                 {
                     headers: { Authorization: `Bearer ${token}` },
@@ -221,6 +222,8 @@ const Profile = ({ navigation }) => {
         return true
     }
 
+
+
     viewData = (userData) => {
         console.log("-----datos", userData)
         setName(userData.names);
@@ -250,7 +253,8 @@ const Profile = ({ navigation }) => {
                 const fileName = imageUri.split('/').pop().split('.')[0];
                 const userImageName = `${fileName}.png`;
                 setImageName(userImageName);
-                console.log("nombre imagen",userImageName);
+                console.log("nombre imagen", userImageName);
+                console.log(result.assets[0].uri)
             }
         } catch (error) { console.log("Error al cargar la imagen", error); }
     };
@@ -262,6 +266,7 @@ const Profile = ({ navigation }) => {
             return require("../../assets/avatar.png");
         }
     }
+
     return (
         <Principal>
             <ScrollView>
