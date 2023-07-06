@@ -30,7 +30,7 @@ const Register = ({ navigation }) => {
     const [address, setAddress] = useState("");
     const [errorAddress, setErrorAddress] = useState("");
     const [modalVisibleError, setModalVisibleError] = useState(false);
-
+    const [errorData, setErrorData] = useState("");
 
     const handleRegistration = () => {
         axios.post('https://endpointsco-production.up.railway.app/api/register/patient', {
@@ -48,8 +48,7 @@ const Register = ({ navigation }) => {
                 console.log(response.data);
             })
             .catch(error => {
-
-                console.error(error);
+                console.error(error.response.data);
             });
     };
     passwordVisibility = () => {

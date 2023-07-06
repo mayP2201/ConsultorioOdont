@@ -6,21 +6,68 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import { colors, commonStyles } from '../common/globalStyle';
 import { ScrollView } from 'react-native-gesture-handler';
 import ModalC from '../components/ModalC';
+import { useContext } from 'react';
+import { CContext } from '../context/CContext';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 export const Schedule = ({ navigation }) => {
   const [selectDoctor, setSelectDoctor] = useState(null);
   const [isEvent, setIsEvent] = useState(false);
   const [event, setEvent] = useState(false);
+  const { token } = useContext(CContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(false);
   const [selectedCell, setSelectedCell] = useState(null);
+  const [appointmentData, setAppointmentData] = useState([]);
+  const [doctorData, setDoctorData] = useState([]);
+  const [data, setData] = useState([]);
 
-  const data = [
-    { key: '1', value: 'Pablo Arias' },
-    { key: '2', value: 'Lily Arias' },
-    { key: '3', value: 'Maria Perez' },
-  ]
+  const getDoctorData = async () => {
+    try {
+      const response = await axios.get(
+        `https://endpointsco-production.up.railway.app/api/get-users/${2}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setDoctorData(response.data);
+      //console.log(response.data);
+      const doctor = response.data[0];
+      const opcionDoctor = doctor.map(
+        doctor => ({
+          key: doctor.identity_card_user,
+          value: `${doctor.names} ${doctor.surnames}`
+        })
+      );
+      console.log(opcionDoctor);
+      setData(opcionDoctor);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getDoctorData();
+    
+  }, []);
 
+  const getAppointment = async (doctorId) => {
+    try {
+      const response = await axios.get(
+        `https://endpointsco-production.up.railway.app/api/getAppointmentsByDentist/${doctorId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setAppointmentData(response.data);
+      console.log(response.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  
   const events = [
     {
       start: new Date(2023, 5, 19, 9, 0),

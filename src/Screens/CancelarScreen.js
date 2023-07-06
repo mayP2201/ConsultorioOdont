@@ -18,7 +18,7 @@ const Cancelar = () => {
                 <View>
                     <Text style={commonStyles.textTile}>LISTA DE CITAS</Text>
                     <Text style={commonStyles.textDescription}>Cancela tu cita aqui</Text>
-                    <Table style={{ backgroundColor: 'yellow', margin: '2%', borderWidth: 2 }}>
+                    <Table style={{ margin: '2%', borderWidth: 2 }}>
                         <Row data={tableHead}  />
                         <Row
                             data={tableData}
