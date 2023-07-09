@@ -1,4 +1,4 @@
-import { LOAD_TOKEN, LOAD_USERDATACONTEXT } from "./CTypes"
+import { LOAD_TOKEN, LOAD_USERDATACONTEXT, LOAD_DOCTORDATACONTEXT,LOAD_APPOINTMENTCONTEXT } from "./CTypes"
 
 
 export const CReducer = (state, action) => {
@@ -14,6 +14,18 @@ export const CReducer = (state, action) => {
             return {
                 ...state,
                 userDataContext: payload,
+            };
+        }
+        case LOAD_DOCTORDATACONTEXT: {
+            return {
+                ...state,
+                doctorDataContext: payload,
+            };
+        }
+        case LOAD_APPOINTMENTCONTEXT: {
+            return {
+                ...state,
+                appointmentContext: payload,
             };
         }
         default:

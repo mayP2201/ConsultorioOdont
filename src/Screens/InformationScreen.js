@@ -4,62 +4,39 @@ import { View, StyleSheet } from 'react-native';
 import { colors, commonStyles } from '../common/globalStyle';
 import Principal from '../components/Principal';
 import { ScrollView } from 'react-native';
-import { Button, Card, Icon } from 'react-native-elements';
-import { color } from 'react-native-reanimated';
-import { Touchable } from 'react-native';
+import { Card } from 'react-native-elements';
+import { useContext } from 'react';
+import { CContext } from '../context/CContext';
 
 const Information = () => {
+
+    const {  doctorDataContext } = useContext(CContext);
+    console.log("--->>>datos doctores informacion -->", doctorDataContext);
     return (
         <Principal>
-            <ScrollView>
-                <View>
-                    <Text style={commonStyles.textTile}>BIENVENIDO A ODONTOARIAS</Text>
-                    <Text style={commonStyles.textDescription}>Presentación de nuestros profesionales</Text>
-                    <View style={styles.containerP}>
-                        <Card containerStyle={styles.cardContainer}>
-                            <Card.Title style={styles.titleCard}>Dr. Pablo Arias</Card.Title>
-                            <Card.Divider style={{ backgroundColor: colors.blue }} />
-                            <Card.FeaturedSubtitle style={styles.subtitleCard}>Odontólogo</Card.FeaturedSubtitle>
-                            <View style={styles.imgContainer}>
-                                <Card.Image style={styles.img} resizeMode='center' source={require('../../assets/o1.jpg')}></Card.Image>
-                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia
-                                    en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales.
-                                    Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener
-                                    una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar
-                                    resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
-                                </Text>
-                            </View>
-                        </Card>
-                        <Card containerStyle={styles.cardContainer}>
-                            <Card.Title style={styles.titleCard}>Dr. Pablo Arias</Card.Title>
-                            <Card.Divider style={{ backgroundColor: colors.blue }} />
-                            <Card.FeaturedSubtitle style={styles.subtitleCard}>Odontólogo</Card.FeaturedSubtitle>
-                            <View style={styles.imgContainer}>
-                                <Card.Image style={styles.img} resizeMode='center' source={require('../../assets/o1.jpg')}></Card.Image>
-                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia
-                                    en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales.
-                                    Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener
-                                    una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar
-                                    resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
-                                </Text>
-                            </View>
-                        </Card>
-                        <Card containerStyle={styles.cardContainer}>
-                            <Card.Title style={styles.titleCard}>Dr. Pablo Arias</Card.Title>
-                            <Card.Divider style={{ backgroundColor: colors.blue }} />
-                            <Card.FeaturedSubtitle style={styles.subtitleCard}>Odontólogo</Card.FeaturedSubtitle>
-                            <View style={styles.imgContainer}>
-                                <Card.Image style={styles.img} resizeMode='center' source={require('../../assets/o1.jpg')}></Card.Image>
-                                <Text style={styles.desc}>"Soy un odontólogo comprometido con la salud dental. Con experiencia
-                                    en diagnóstico y tratamiento, ofrezco soluciones personalizadas para problemas dentales.
-                                    Mi objetivo es brindar atención de calidad, educar a mis pacientes y ayudarles a mantener
-                                    una sonrisa saludable. Utilizo tecnología avanzada y enfoques actualizados para garantizar
-                                    resultados óptimos. ¡Estoy aquí para cuidar de tu sonrisa!"
-                                </Text>
-                            </View>
-                        </Card>
-                    </View>
-                    <View style={styles.infoContainer}>
+        <ScrollView>
+          <View>
+            <Text style={commonStyles.textTile}>BIENVENIDO A ODONTOARIAS</Text>
+            <Text style={commonStyles.textDescription}>Presentación de nuestros profesionales</Text>
+            <View style={styles.containerP}>
+              {doctorDataContext.map((doctorArray, index) => (
+                <View key={index}>
+                  {doctorArray.map((doctor, subIndex) => (
+                    <Card containerStyle={styles.cardContainer} key={subIndex}>
+                      <Card.Title style={styles.titleCard}>{doctor.names}</Card.Title>
+                      
+                      <Card.Divider style={{ backgroundColor: colors.blue }} />
+                      <Card.FeaturedSubtitle style={styles.subtitleCard}>Odontólogo</Card.FeaturedSubtitle>
+                      <View style={styles.imgContainer}>
+                        <Card.Image style={styles.img} resizeMode='center' source={{ uri: doctor.profile_picture_url }}></Card.Image>
+                        <Text style={styles.desc}>{doctor.profesional_description}</Text>
+                      </View>
+                    </Card>
+                  ))}
+                </View>
+              ))}
+            </View>
+            <View style={styles.infoContainer}>
                         <View style={styles.infoTextContent}>
                             <Text style={[styles.infoText,{textAlign:'left',fontWeight:'bold'}]}>Atención: </Text>
                             <Text style={styles.infoText}>Lunes a Viernes </Text>
@@ -68,14 +45,14 @@ const Information = () => {
                             <TouchableOpacity>
                                 <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>www.odontoarias.com</Text>
                             </TouchableOpacity>
-
                         </View>
                     </View>
-                </View>
-            </ScrollView>
-        </Principal>
+          </View>
+        </ScrollView>
+      </Principal>
     );
-}
+  }
+
 
 const styles = StyleSheet.create({
     cardContainer: {

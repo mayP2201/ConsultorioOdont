@@ -36,7 +36,7 @@ const Profile = ({ navigation }) => {
     const [newAvatar, setNewAvatar] = useState("");
     const [imageName, setImageName] = useState("");
     const formData = new FormData();
-    const { userDataContext , handleChangeuserDataContext } = useContext(CContext);
+    const { userDataContext, handleChangeuserDataContext } = useContext(CContext);
 
     const getUserData = async () => {
         try {
@@ -61,30 +61,36 @@ const Profile = ({ navigation }) => {
         viewData(userData);
     }, [userData]);
 
-    
     const updateUserData = async () => {
+
         try {
-            const response = await axios.post(
-                'https://endpointsco-production.up.railway.app/api/update-user',
-                {
-                    names: name,
-                    surnames: lastName,
-                    email: email,
-                    phone: phone,
-                    address: address,
-                    //image: imageName,
-                    profesional_descrption: "",
-                },
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-            console.log(response.data);
-            verify();
-            navigation.navigate("Horario");
+            if (verify()) {
+                const response = await axios.post(
+                    'https://endpointsco-production.up.railway.app/api/update-user',
+                    {
+                        names: name,
+                        surnames: lastName,
+                        email: email,
+                        phone: phone,
+                        address: address,
+                        //image: imageName,
+                        profesional_descrption: "",
+                    },
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
+                console.log("actualizacion de datos",response.data);
+                // union de dos objetos el uno se sobre pone al otro 
+                setUserData({...userData,...{names:name, surnames:lastName, email:email, phone:phone, address:address}});
+                navigation.navigate("Horario");
+            }else{
+                console.log("datos erroneos")
+            }
         } catch (error) {
             console.log(error);
         }
+
     };
 
     passwordVisibility = () => {
@@ -156,6 +162,7 @@ const Profile = ({ navigation }) => {
             && email.trim() === ""
             && phone.trim() === "" && address.trim() === ""
         ) {
+            console.log("todo bien primer if");
             setErrorName(messages.INCORRECT_NAME);
             setErrorLastName(messages.INCORRECT_LASTNAME);
             setErrorEmail(messages.EMAIL_INCORRECT);
@@ -164,6 +171,7 @@ const Profile = ({ navigation }) => {
             setErrorImage(messages.NOT_LOAD_IMAGE);
         }
         else {
+            console.log("todo mal primer else");
             setErrorName(null);
             setErrorLastName(null);
             setErrorId(null);
@@ -172,7 +180,9 @@ const Profile = ({ navigation }) => {
             setErrorAddress(null);
             setErrorImage(null);
         }
+        console.log("validando uno ", validate());
         if (validate()) {
+
             console.log("Guardando....");
             setErrorName("");
             setErrorLastName("");
@@ -181,12 +191,9 @@ const Profile = ({ navigation }) => {
             setErrorAddress("")
             setErrorImage("")
             //setModalVisible(true);
+            return true;
         }
-        else {
-            console.log("error");
-            //setModalVisibleError(true);
-
-        }
+        return false;
     };
 
     const validate = () => {
@@ -214,10 +221,11 @@ const Profile = ({ navigation }) => {
             setErrorAddress(messages.PASSWORDS_NOTSECURITY);
             return false;
         }
-        if (!newAvatar) {
+        {/*if (!newAvatar) {
+            
             setErrorImage(messages.NOT_LOAD_IMAGE);
             return false;
-        }
+        }*/}
 
         return true
     }

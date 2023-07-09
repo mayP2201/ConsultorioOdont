@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert, Modal, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Alert, Modal, Pressable, Button } from 'react-native'
 import React, { useState } from 'react'
 import Calendar from 'react-native-big-calendar'
 import Principal from '../components/Principal';
@@ -13,14 +13,11 @@ import axios from 'axios';
 
 export const Schedule = ({ navigation }) => {
   const [selectDoctor, setSelectDoctor] = useState(null);
-  const [isEvent, setIsEvent] = useState(false);
-  const [event, setEvent] = useState(false);
-  const { token } = useContext(CContext);
+  const { token, appointmentContext, doctorDataContext, handleChangeappointmentContext, handleChangedoctorDataContext
+  } = useContext(CContext);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(false);
   const [selectedCell, setSelectedCell] = useState(null);
   const [appointmentData, setAppointmentData] = useState([]);
-  const [doctorData, setDoctorData] = useState([]);
   const [data, setData] = useState([]);
 
   const getDoctorData = async () => {
@@ -31,8 +28,9 @@ export const Schedule = ({ navigation }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setDoctorData(response.data);
-      //console.log(response.data);
+      console.log("----->", response.data);
+      handleChangedoctorDataContext(response.data);
+      console.log(response.data);
       const doctor = response.data[0];
       const opcionDoctor = doctor.map(
         doctor => ({
@@ -40,7 +38,7 @@ export const Schedule = ({ navigation }) => {
           value: `${doctor.names} ${doctor.surnames}`
         })
       );
-      console.log(opcionDoctor);
+      //console.log(opcionDoctor);
       setData(opcionDoctor);
     } catch (error) {
       console.log(error);
@@ -48,13 +46,14 @@ export const Schedule = ({ navigation }) => {
   };
   useEffect(() => {
     getDoctorData();
-    
+    //Uso de contexto para guardar datos
+    handleChangeappointmentContext(appointmentData);
   }, []);
 
-  const getAppointment = async (doctorId) => {
+  const getAppointment = async (idDoctor) => {
     try {
       const response = await axios.get(
-        `https://endpointsco-production.up.railway.app/api/getAppointmentsByDentist/${doctorId}`,
+        `https://endpointsco-production.up.railway.app/api/getAppointmentsByDentist/${idDoctor}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -66,35 +65,74 @@ export const Schedule = ({ navigation }) => {
       console.log(error);
     }
   };
-  
-  
-  const events = [
-    {
-      start: new Date(2023, 5, 19, 9, 0),
-      end: new Date(2023, 5, 19, 11, 0),
-    },
-    {
-      start: new Date(2023, 5, 20, 10, 0),
-      end: new Date(2023, 5, 20, 12, 0),
-    },
-  ]
+
+  const takeAppointment = async (id_cita) => {
+    try {
+      console.log("token", token);
+      console.log("id_cita", id_cita);
+      const response = await axios.post(
+        `https://endpointsco-production.up.railway.app/api/scheduleAppointment/${id_cita}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("tomar cita actualizacion -->",response.data);
+    } catch (error) {
+      console.log("error tomar citas",error);
+
+    }
+  };
 
   const selectAppointment = (event) => {
-    setSelectedCell(event.start.toString());
-    // console.log(event.start.toString());
+    let result = Object.assign([], appointmentData);
+    //console.log("result", result);
+    result = result.map((item) => {
+      return item.map((item) => {
+        return {
+          ...item,
+          ...{
+            id_status: event.id == item.id ? 2 : item.id_status
+          }
+        }
+      })
+    });
+    takeAppointment(event.id);
+    setAppointmentData(result);
     setModalVisible(true);
   };
 
   const doctorSelector = (selectDoctor) => {
     setSelectDoctor(selectDoctor);
+    getAppointment(selectDoctor);
   };
 
-  const eventCellStyleGetter = ({ event, start, end }) => {
+  const structureEvents = () => {
+    let events = [];
+    if (appointmentData && appointmentData.length > 0) {
+      events = appointmentData[0].map((appointment) => {
+        //console.log("appointment", appointment);
+        const startDate = new Date(appointment.date + "T" + appointment.start_time);
+        const endDate = new Date(appointment.date + "T" + appointment.end_time);
+        return { start: startDate, end: endDate, id_status: appointment.id_status, id: appointment.id };
+      });
+    } else {
+      //console.log("citas no disponibles")
+    }
 
-    if (selectedCell && start.toString() === selectedCell) {
+    return events;
+  };
+
+  const eventsArray = structureEvents();
+
+  const eventCellStyleGetter = (props) => {
+    //console.log("--->props", props);
+    //console.log("selectedCell", selectedCell);
+    if (props.id_status === 1) {
+      return { backgroundColor: colors.green };
+    } else if (props.id_status === 2) {
       return { backgroundColor: colors.blue };
     }
-    return { backgroundColor: colors.green };
   };
 
   const buttonAceptModal = () => {
@@ -105,7 +143,6 @@ export const Schedule = ({ navigation }) => {
   const buttonCancelModal = () => {
     setModalVisible(!modalVisible);
   }
-
 
   return (
     <Principal>
@@ -134,7 +171,7 @@ export const Schedule = ({ navigation }) => {
           </View>
           <View style={styles.calendar}>
             <Calendar
-              events={events}
+              events={eventsArray}
               onPressEvent={selectAppointment}
               height={530}
               dayHeaderHighlightColor="lightblue"
@@ -151,7 +188,7 @@ export const Schedule = ({ navigation }) => {
             setModalVisible={setModalVisible}
             onAccept={buttonAceptModal}
             onCancel={buttonCancelModal}
-            modalText={`¿Estás seguro de tomar la cita con el doctor ${selectDoctor}? `}
+            modalText={`¿Estás seguro de tomar la cita con el doctor ${data.value}? `}
             showCancelButton={true}
             imageModal={require('../../assets/question-mark.png')}
           />
