@@ -46,9 +46,18 @@ const Register = ({ navigation }) => {
             .then(response => {
 
                 console.log(response.data);
+                setModalVisible(true);
             })
             .catch(error => {
-                console.error(error.response.data);
+                const errorData = error.response.data.error;
+                let errorMessage = '';
+                if (errorData.email) {
+                  errorMessage = errorData.email[0];
+                } else if (errorData.identity_card_user) {
+                  errorMessage = errorData.identity_card_user[0];
+                }
+                setErrorData(errorMessage);         
+                setModalVisibleError(true); 
             });
     };
     passwordVisibility = () => {
@@ -204,12 +213,12 @@ const Register = ({ navigation }) => {
             setErrorPhone("");
             setErrorPassword("");
             setErrorMathPassword("");
-            setErrorAddress("")
-            setModalVisible(true);
+            setErrorAddress("");
+            handleRegistration();
         }
         else {
             console.log("error");
-            setModalVisibleError(true);
+            //setModalVisibleError(true);
 
         }
     };
@@ -253,13 +262,9 @@ const Register = ({ navigation }) => {
         return true;
     };
     buttonAcept = () => {
-        handleRegistration();
         goToLogin();
     }
 
-    buttonCancelModal = () => {
-        setModalVisible(!modalVisible);
-    }
     const goToLogin = () => {
         navigation.navigate("Login");
         console.log("Ir a Login");
@@ -428,15 +433,15 @@ const Register = ({ navigation }) => {
                         setModalVisible={setModalVisible}
                         onAccept={buttonAcept}
                         onCancel={buttonCancelModal}
-                        modalText="¿Esta seguro de guardar los datos?"
-                        showCancelButton={true}
+                        modalText="El registro se realizo con éxito"
+                        showCancelButton={false}
                         imageModal={require('../../assets/registered.png')}
                     />
                     <ModalC
                         modalVisible={modalVisibleError}
                         setModalVisible={setModalVisibleError}
                         onAccept={buttonAceptModalError}
-                        modalText="Verifique los datos de registro"
+                        modalText={errorData}
                         showCancelButton={false}
                         imageModal={require('../../assets/attention.png')}
                     />

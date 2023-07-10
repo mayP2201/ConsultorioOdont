@@ -111,13 +111,12 @@ export const Schedule = ({ navigation }) => {
     let events = [];
     if (appointmentData && appointmentData.length > 0) {
       events = appointmentData[0].map((appointment) => {
-        //console.log("appointment", appointment);
         const startDate = new Date(appointment.date + "T" + appointment.start_time);
         const endDate = new Date(appointment.date + "T" + appointment.end_time);
         return { start: startDate, end: endDate, id_status: appointment.id_status, id: appointment.id };
       });
     } else {
-      //console.log("citas no disponibles")
+      console.log("citas no disponibles")
     }
 
     return events;
@@ -126,8 +125,6 @@ export const Schedule = ({ navigation }) => {
   const eventsArray = structureEvents();
 
   const eventCellStyleGetter = (props) => {
-    //console.log("--->props", props);
-    //console.log("selectedCell", selectedCell);
     if (props.id_status === 1) {
       return { backgroundColor: colors.green };
     } else if (props.id_status === 2) {
