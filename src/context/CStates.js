@@ -29,7 +29,6 @@ export const CStates = ({ children }) => {
     const handleChangeappointmentContext = useCallback((appointmentContext) => {
         dispatch({ type: LOAD_APPOINTMENTCONTEXT, payload: appointmentContext });
     }, []);
-
     return (
         <CContext.Provider
             value={{

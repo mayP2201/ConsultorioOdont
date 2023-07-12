@@ -19,7 +19,7 @@ export const Schedule = ({ navigation }) => {
   const [selectedCell, setSelectedCell] = useState(null);
   const [appointmentData, setAppointmentData] = useState([]);
   const [data, setData] = useState([]);
-
+  const [messege, setMessege] = useState("");
   const getDoctorData = async () => {
     try {
       const response = await axios.get(
@@ -28,9 +28,8 @@ export const Schedule = ({ navigation }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("----->", response.data);
       handleChangedoctorDataContext(response.data);
-      console.log(response.data);
+      //console.log(response.data);
       const doctor = response.data[0];
       const opcionDoctor = doctor.map(
         doctor => ({
@@ -46,7 +45,6 @@ export const Schedule = ({ navigation }) => {
   };
   useEffect(() => {
     getDoctorData();
-    //Uso de contexto para guardar datos
     handleChangeappointmentContext(appointmentData);
   }, []);
 
@@ -59,8 +57,7 @@ export const Schedule = ({ navigation }) => {
         }
       );
       setAppointmentData(response.data);
-      console.log(response.data);
-
+      //console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -77,14 +74,18 @@ export const Schedule = ({ navigation }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("tomar cita actualizacion -->",response.data);
+
+      console.log("tomar cita actualizacion -->", response.data);
+      setMessege(response.data.message);
     } catch (error) {
-      console.log("error tomar citas",error);
+      console.log("error tomar citas", error);
 
     }
   };
 
   const selectAppointment = (event) => {
+    setModalVisible(true);
+    console.log("----->even de select", event)
     let result = Object.assign([], appointmentData);
     //console.log("result", result);
     result = result.map((item) => {
@@ -99,7 +100,6 @@ export const Schedule = ({ navigation }) => {
     });
     takeAppointment(event.id);
     setAppointmentData(result);
-    setModalVisible(true);
   };
 
   const doctorSelector = (selectDoctor) => {
@@ -131,13 +131,7 @@ export const Schedule = ({ navigation }) => {
       return { backgroundColor: colors.blue };
     }
   };
-
   const buttonAceptModal = () => {
-    // setIsEvent(true);
-    setModalVisible(!modalVisible);
-  }
-
-  const buttonCancelModal = () => {
     setModalVisible(!modalVisible);
   }
 
@@ -184,10 +178,9 @@ export const Schedule = ({ navigation }) => {
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
             onAccept={buttonAceptModal}
-            onCancel={buttonCancelModal}
-            modalText={`¿Estás seguro de tomar la cita con el doctor ${data.value}? `}
-            showCancelButton={true}
-            imageModal={require('../../assets/question-mark.png')}
+            modalText={messege}
+            showCancelButton={false}
+            imageModal={require('../../assets/checked.png')}
           />
         </View>
       </ScrollView>

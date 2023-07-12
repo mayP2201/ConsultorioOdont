@@ -46,15 +46,16 @@ const Profile = ({ navigation }) => {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
+            handleChangeuserDataContext(response.data);
+            console.log("user Context",userDataContext);
             setUserData(response.data);
-            console.log(response.data);
+            console.log("contexto datods--<", userDataContext);
         } catch (error) {
             console.log(error);
         }
     };
     useEffect(() => {
         getUserData();
-        handleChangeuserDataContext(userData);
     }, []);
 
     useEffect(() => {
@@ -80,11 +81,11 @@ const Profile = ({ navigation }) => {
                         headers: { Authorization: `Bearer ${token}` },
                     }
                 );
-                console.log("actualizacion de datos",response.data);
+                console.log("actualizacion de datos", response.data);
                 // union de dos objetos el uno se sobre pone al otro 
-                setUserData({...userData,...{names:name, surnames:lastName, email:email, phone:phone, address:address}});
-                navigation.navigate("Horario");
-            }else{
+                setUserData({ ...userData, ...{ names: name, surnames: lastName, email: email, phone: phone, address: address } });
+                navigation.navigate("Information");
+            } else {
                 console.log("datos erroneos")
             }
         } catch (error) {
