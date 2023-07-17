@@ -432,10 +432,10 @@ const Register = ({ navigation }) => {
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
                         onAccept={buttonAcept}
-                        onCancel={buttonCancelModal}
                         modalText="El registro se realizo con éxito"
                         showCancelButton={false}
                         imageModal={require('../../assets/registered.png')}
+                        acceptButtonText="Aceptar"
                     />
                     <ModalC
                         modalVisible={modalVisibleError}
@@ -444,6 +444,7 @@ const Register = ({ navigation }) => {
                         modalText={errorData}
                         showCancelButton={false}
                         imageModal={require('../../assets/attention.png')}
+                        acceptButtonText="Aceptar"
                     />
                 </View>
             </ScrollView>

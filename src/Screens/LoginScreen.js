@@ -69,8 +69,7 @@ const Login = ({ navigation }) => {
         }
         setPassword(password);
     }
-
-    
+ 
     const goToMenu = () => {
         console.log("Ir a Horario");
         navigation.replace("Horario");
@@ -79,8 +78,6 @@ const Login = ({ navigation }) => {
     buttonAceptModal = () => {
         setModalVisible(!modalVisible);
     }
-
-    
 
     return (
         <Principal>
@@ -167,6 +164,7 @@ const Login = ({ navigation }) => {
                     modalText="Verifique las credenciales ingresadas"
                     showCancelButton={false}
                     imageModal={require('../../assets/attention.png')}
+                    acceptButtonText="Aceptar"
                 />
             </ScrollView>
         </Principal>

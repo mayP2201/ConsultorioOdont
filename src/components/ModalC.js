@@ -3,9 +3,7 @@ import { View, StyleSheet, Text, Modal, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import { commonStyles, colors } from '../common/globalStyle';
 
-
-
-const ModalC = ({ modalVisible, setModalVisible, onAccept, onCancel, modalText, showCancelButton, imageModal }) => {
+const ModalC = ({ modalVisible, setModalVisible, onAccept, onCancel, modalText, showCancelButton, imageModal, acceptButtonText, cancelButtonText }) => {
     return (
         <View style={styles.centeredView}>
             <Modal
@@ -21,17 +19,17 @@ const ModalC = ({ modalVisible, setModalVisible, onAccept, onCancel, modalText, 
                         </View>
                         <View style={[commonStyles.containerButton, { flexDirection: 'row' }]}>
                             {showCancelButton ? <Button
-                                title={"Cancelar"}
+                                title={cancelButtonText}
                                 buttonStyle={commonStyles.buttonStyle}
-                                titleStyle={[commonStyles.fontButton, { fontSize: 16, marginHorizontal:'5%' }]}
+                                titleStyle={[commonStyles.fontButton, { fontSize: 16, marginHorizontal: '5%' }]}
                                 containerStyle={styles.modalButton}
                                 onPress={onCancel}
                             /> : <></>
                             }
                             <Button
-                                title={"Aceptar"}
+                                title={acceptButtonText}
                                 buttonStyle={[commonStyles.buttonStyle, { backgroundColor: colors.lightViolet }]}
-                                titleStyle={[commonStyles.fontButton, { fontSize: 16, marginHorizontal:'5%' }]}
+                                titleStyle={[commonStyles.fontButton, { fontSize: 16, marginHorizontal: '5%' }]}
                                 containerStyle={styles.modalButton}
                                 onPress={onAccept}
                             />

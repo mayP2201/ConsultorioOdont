@@ -131,6 +131,7 @@ const RegistroNav = () => {
       <Stack.Screen name='Code' component={Code} options={{ headerShown: false }} />
       <Stack.Screen name='NewPassword' component={NewPassword} options={{ headerShown: false }} />
       <Stack.Screen name='UpdatePassword' component={UpdatePassword} options={{ headerShown: false }} />
+      <Stack.Screen name='Schedule' component={Schedule} options={{ headerShown: false }} />
     </StackLogin.Navigator>
   );
 }

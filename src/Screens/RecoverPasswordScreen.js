@@ -135,6 +135,7 @@ const RecoverPassword = ({ navigation }) => {
                             modalText="El código se envió con exito, por favor revisa tu correo"
                             showCancelButton={false}
                             imageModal={require('../../assets/mensaje.png')}
+                            acceptButtonText="Aceptar"
                         />
                         <ModalC
                             modalVisible={modalVisibleError}
@@ -143,6 +144,7 @@ const RecoverPassword = ({ navigation }) => {
                             modalText="Verifica el correo ingresado"
                             showCancelButton={false}
                             imageModal={require('../../assets/attention.png')}
+                            acceptButtonText="Aceptar"
                         />
                     </View>
                 </View>

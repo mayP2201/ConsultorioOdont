@@ -20,6 +20,8 @@ export const Schedule = ({ navigation }) => {
   const [appointmentData, setAppointmentData] = useState([]);
   const [data, setData] = useState([]);
   const [messege, setMessege] = useState("");
+  const [activeDate, setActiveDate] = useState(new Date());
+
   const getDoctorData = async () => {
     try {
       const response = await axios.get(
@@ -135,6 +137,8 @@ export const Schedule = ({ navigation }) => {
     setModalVisible(!modalVisible);
   }
 
+
+
   return (
     <Principal>
       <ScrollView>
@@ -181,10 +185,11 @@ export const Schedule = ({ navigation }) => {
             modalText={messege}
             showCancelButton={false}
             imageModal={require('../../assets/checked.png')}
+            acceptButtonText="Aceptar"
           />
         </View>
       </ScrollView>
-    </Principal>
+    </Principal >
   )
 }
 
@@ -271,5 +276,6 @@ const styles = StyleSheet.create({
   containerBox: {
     marginTop: '5%',
     margin: '7%'
-  }
+  },
+
 })

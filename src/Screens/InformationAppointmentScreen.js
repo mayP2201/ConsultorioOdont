@@ -1,13 +1,13 @@
+import { Text } from '@rneui/base';
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import { Text } from 'react-native-elements';
 
 const InformationAppointment = () => {
-    return (
-        <View>
-            <Text>INFORMACION DE CITAS</Text>
-        </View>
-    );
+  return (
+    <View>
+      <Text>doctor</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({})

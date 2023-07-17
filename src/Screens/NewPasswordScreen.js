@@ -186,6 +186,7 @@ const NewPassword = (props) => {
                             modalText="Verifica las contraseñas ingresadas"
                             showCancelButton={false}
                             imageModal={require('../../assets/attention.png')}
+                            acceptButtonText="Aceptar"
                         />
                     </View>
                 </View>
