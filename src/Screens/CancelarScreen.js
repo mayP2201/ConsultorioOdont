@@ -83,6 +83,7 @@ const Cancelar = ({ navigation }) => {
     </View>
   ]);
 
+  
   buttonAceptModal = () =>{
     cancelAppointment(idAppointment);
     setModalVisible(false);

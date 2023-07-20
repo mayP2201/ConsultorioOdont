@@ -7,8 +7,8 @@ const Principal = ({ children }) => {
     return (
         <View style={styles.container}>
             <LinearGradient
-                colors={['#D6ECF5', '#97DEFC']}
-                start={{ x: 0, y: 0.20 }}
+                colors={['#bce6f5', '#39C1FC']}
+                start={{ x: 0, y: 0.30 }}
                 end={{ x: 0, y: 0.80 }}
                 style={styles.gradient}>
                 <View style={styles.contentContainer}>

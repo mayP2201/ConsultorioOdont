@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Alert, Modal, Pressable, Button } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, StyleSheet, Platform } from 'react-native'
+import React, { useState, useRef } from 'react'
 import Calendar from 'react-native-big-calendar'
 import Principal from '../components/Principal';
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -10,6 +10,11 @@ import { useContext } from 'react';
 import { CContext } from '../context/CContext';
 import { useEffect } from 'react';
 import axios from 'axios';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import { Button } from 'react-native-elements';
+
+
 
 export const Schedule = ({ navigation }) => {
   const [selectDoctor, setSelectDoctor] = useState(null);
@@ -20,8 +25,7 @@ export const Schedule = ({ navigation }) => {
   const [appointmentData, setAppointmentData] = useState([]);
   const [data, setData] = useState([]);
   const [messege, setMessege] = useState("");
-  const [activeDate, setActiveDate] = useState(new Date());
-
+ 
   const getDoctorData = async () => {
     try {
       const response = await axios.get(

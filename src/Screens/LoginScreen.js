@@ -84,7 +84,7 @@ const Login = ({ navigation }) => {
             <ScrollView>
                 <View style={styles.img}>
                     <Image
-                        source={require('../../assets/img.png')}
+                        source={require('../../assets/logo.png')}
                     />
                 </View>
                 <View style={styles.input}>

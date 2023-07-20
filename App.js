@@ -20,6 +20,7 @@ import InformationAppointment from "./src/Screens/InformationAppointmentScreen";
 import { useContext } from "react";
 import { CContext } from "./src/context/CContext";
 import React, { useState } from 'react';
+import  { NotificationsScreen } from "./src/Screens/NotificationsScreen";
 
 const Stack = createStackNavigator();
 const StackLogin = createNativeStackNavigator();
@@ -114,6 +115,14 @@ const DrawerNav = () => {
         name='DrawerCancelar'
         component={Cancelar}
         options={{ title: 'Lista de citas', headerShown: true, }} />
+        <Drawer.Screen
+        name='DrawerNotofications'
+        component={NotificationsScreen}
+        options={{ title: 'Notificaciones', headerShown: true, }} />
+        <Drawer.Screen
+        name='DrawerInfoApp'
+        component={InformationAppointment}
+        options={{ title: 'InfoApp', headerShown: true, }} />
       {/*<Drawer.Screen
         name='CerrarSesion'
         component={FinalizarSesion}
