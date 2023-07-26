@@ -162,7 +162,6 @@ export const NotificationsScreen = () => {
                 </View>
                 <Button
                     title="Press to Send Notification"
-                    
                 />
             </View>
         </View>

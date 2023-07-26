@@ -8,6 +8,8 @@ import { messages } from '../common/messages';
 import { useState } from 'react';
 import axios from 'axios';
 import ModalC from '../components/ModalC';
+import { useContext } from 'react';
+import { CContext } from '../context/CContext';
 
 const Register = ({ navigation }) => {
     const [name, setName] = useState("");
@@ -31,8 +33,10 @@ const Register = ({ navigation }) => {
     const [errorAddress, setErrorAddress] = useState("");
     const [modalVisibleError, setModalVisibleError] = useState(false);
     const [errorData, setErrorData] = useState("");
+    const {handleChangevisibleModal} = useContext(CContext);
 
     const handleRegistration = () => {
+        handleChangevisibleModal(true);
         axios.post('https://endpointsco-production.up.railway.app/api/register/patient', {
             identity_card_user: id,
             names: name,
@@ -44,7 +48,7 @@ const Register = ({ navigation }) => {
             address: address
         })
             .then(response => {
-
+                handleChangevisibleModal(false);
                 console.log(response.data);
                 setModalVisible(true);
             })

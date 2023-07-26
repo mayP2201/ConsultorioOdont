@@ -12,17 +12,19 @@ import { useContext } from 'react';
 import { CContext } from '../context/CContext';
 import { useState } from 'react';
 import ModalC from '../components/ModalC';
+import ReturnButton from '../components/ReturnButton';
 
 
 const Cancelar = ({ navigation }) => {
 
-  const { token, userDataContext } = useContext(CContext);
+  const { token, userDataContext, handleChangevisibleModal} = useContext(CContext);
   const [appointment, setAppointment] = useState([]);
   const [idAppointment, setIdAppointment] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessege] = useState(null);
 
   const getAppointmentAll = async () => {
+    handleChangevisibleModal(true);
     console.log("----userData", userDataContext);
     try {
       const response = await axios.get(
@@ -39,6 +41,7 @@ const Cancelar = ({ navigation }) => {
       );
       console.log("cita de miiiii perfil ", patientAppointments);
       setAppointment(patientAppointments);
+      handleChangevisibleModal(false);
     } catch (error) {
       console.log(error);
     }
@@ -48,6 +51,7 @@ const Cancelar = ({ navigation }) => {
   }, []);
 
   const cancelAppointment = async (id_cita) => {
+    handleChangevisibleModal(true);
     try {
       const response = await axios.post(
         `https://endpointsco-production.up.railway.app/api/cancelAppointment/${id_cita}`,
@@ -58,6 +62,7 @@ const Cancelar = ({ navigation }) => {
       );
 
       console.log("cancelar cita -->", response.data);
+      handleChangevisibleModal(false);
       setMessege(response.data.message);
     } catch (error) {
       console.log("error tomar citas", error);
@@ -83,8 +88,7 @@ const Cancelar = ({ navigation }) => {
     </View>
   ]);
 
-  
-  buttonAceptModal = () =>{
+  buttonAceptModal = () => {
     cancelAppointment(idAppointment);
     setModalVisible(false);
 
@@ -94,7 +98,7 @@ const Cancelar = ({ navigation }) => {
   const showMessage = () => {
     setTimeout(() => {
       setMessege('');
-    }, 5000);
+    }, 7000);
   };
 
   const buttonAppointmentModal = (navigate) => {
@@ -108,9 +112,13 @@ const Cancelar = ({ navigation }) => {
         <View>
           <Text style={commonStyles.textTile}>LISTA DE CITAS</Text>
           <Text style={commonStyles.textDescription}>Cancela tu cita aqui</Text>
-          <Text>{message} {showMessage()}</Text>
+          <Text style={styles.cancel}>{message} {showMessage()}</Text>
+          <View style={styles.contentPatient}>
+            <Text style = {styles.patient}>Paciente: </Text>
+            <Text style = {styles.namePatient}>{userDataContext.names} {userDataContext.surnames}</Text>
+          </View>
           <View style={styles.containerTable}>
-            <Table borderStyle={{ borderWidth: 2, borderRadius: 15 }}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: colors.blue}}>
               <Row data={tableHead} style={styles.head} textStyle={styles.headText} />
               {tableData.map((rowData, index) => (
                 <Row key={index} data={rowData} style={styles.row} textStyle={styles.text} />
@@ -130,6 +138,7 @@ const Cancelar = ({ navigation }) => {
           />
         </View>
       </ScrollView>
+      <ReturnButton onPress={()=> navigation.goBack()} />
     </Principal>
   );
 }
@@ -140,8 +149,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   containerTable: {
-    marginTop: '10%',
+    //marginTop: '10%',
     marginHorizontal: '5%',
+    marginTop:'5%'
+
   },
   head: {
     height: 40,
@@ -159,7 +170,32 @@ const styles = StyleSheet.create({
   text: {
     margin: '5%',
     textAlign: 'center',
+    color: colors.blue
   },
+  contentPatient:{
+    flex:1, 
+    flexDirection:'row', 
+    //backgroundColor:'yellow', 
+    marginLeft:'5%', 
+    marginTop:'5%'
+  },
+
+  patient:
+  {
+    color: colors.blue,
+    fontWeight:'bold'
+  },
+
+  namePatient:{
+    color: colors.lightBlue
+  },
+  cancel:{
+    textAlign:'center',
+    fontWeight:'bold',
+    color: 'red',
+    fontSize:12,
+    marginTop:'5%'
+  }
 })
 
 export default Cancelar;

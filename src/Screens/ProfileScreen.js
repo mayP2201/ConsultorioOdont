@@ -14,6 +14,8 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
+import ModalC from '../components/ModalC';
+import ReturnButton from '../components/ReturnButton';
 
 const Profile = ({ navigation }) => {
     const [name, setName] = useState();
@@ -35,33 +37,13 @@ const Profile = ({ navigation }) => {
     const [userData, setUserData] = useState([]);
     const [newAvatar, setNewAvatar] = useState("");
     const [imageName, setImageName] = useState("");
-    const formData = new FormData();
-    const { userDataContext, handleChangeuserDataContext } = useContext(CContext);
-
-    const getUserData = async () => {
-        try {
-            const response = await axios.get(
-                'https://endpointsco-production.up.railway.app/api/get-user',
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
-            handleChangeuserDataContext(response.data);
-            console.log("user Context",userDataContext);
-            setUserData(response.data);
-            console.log("contexto datods--<", userDataContext);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    useEffect(() => {
-        getUserData();
-    }, []);
+    const { userDataContext } = useContext(CContext);
+    const [message, setMessege] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
-        viewData(userData);
-    }, [userData]);
-
+        viewData();
+      }, []);
     const updateUserData = async () => {
 
         try {
@@ -84,7 +66,9 @@ const Profile = ({ navigation }) => {
                 console.log("actualizacion de datos", response.data);
                 // union de dos objetos el uno se sobre pone al otro 
                 setUserData({ ...userData, ...{ names: name, surnames: lastName, email: email, phone: phone, address: address } });
-                navigation.navigate("Information");
+                setMessege(response.data.message);
+                setModalVisible(true);
+
             } else {
                 console.log("datos erroneos")
             }
@@ -231,16 +215,13 @@ const Profile = ({ navigation }) => {
         return true
     }
 
-
-
-    viewData = (userData) => {
-        console.log("-----datos", userData)
-        setName(userData.names);
-        setLastName(userData.surnames);
-        setId(userData.identity_card_user);
-        setEmail(userData.email);
-        setPhone(userData.phone);
-        setAddress(userData.address);
+    viewData = () => {
+        setName(userDataContext.names);
+        setLastName(userDataContext.surnames);
+        setId(userDataContext.identity_card_user);
+        setEmail(userDataContext.email);
+        setPhone(userDataContext.phone);
+        setAddress(userDataContext.address);
         //setNewAvatar(userData.image);
 
     }
@@ -276,6 +257,10 @@ const Profile = ({ navigation }) => {
         }
     }
 
+
+    buttonAceptModal = ()=>{
+        setModalVisible(false);
+    }
     return (
         <Principal>
             <ScrollView>
@@ -448,7 +433,17 @@ const Profile = ({ navigation }) => {
                         /> : <></>
                     }
                 </View>
+                <ModalC
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    onAccept={buttonAceptModal}
+                    modalText={message}
+                    showCancelButton={false}
+                    imageModal={require('../../assets/checked.png')}
+                    acceptButtonText="Aceptar"
+                />
             </ScrollView>
+            <ReturnButton onPress={()=> navigation.goBack()} />
         </Principal>
     );
 }

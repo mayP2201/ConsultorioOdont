@@ -21,25 +21,34 @@ const Login = ({ navigation }) => {
     const [iconVisibility, setIconVisibility] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [data, setData] = useState([]);
-    const { token, handleChangeToken } = useContext(CContext);
+    const { token, handleChangeToken, handleChangeuserDataContext, handleChangevisibleModal } = useContext(CContext);
 
     const handleLogin = () => {
-      axios
-        .post('https://endpointsco-production.up.railway.app/api/login', {
-          email: email,
-          password: password
-        })
-        .then(response => {
-          console.log(response.data.token);
-          const tok = response.data.token;
-          handleChangeToken(tok);
-          goToMenu();
-        })
-        .catch(error => {
-          setModalVisible(true);
-        });
+        handleChangevisibleModal(true);
+        axios
+            .post('https://endpointsco-production.up.railway.app/api/login', {
+                email: email,
+                password: password
+            })
+            .then(async response => {
+                console.log(response.data);
+                const tok = response.data.token;
+                handleChangeToken(tok);
+                const response1 = await axios.get(
+                    'https://endpointsco-production.up.railway.app/api/get-user',
+                    {
+                        headers: { Authorization: `Bearer ${tok}` },
+                    }
+                );
+                handleChangeuserDataContext(response1.data);
+                handleChangevisibleModal(false);
+            })
+            .catch(error => {
+                console.log("error", error);
+                setModalVisible(true);
+            });
     };
-    
+
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
@@ -69,11 +78,7 @@ const Login = ({ navigation }) => {
         }
         setPassword(password);
     }
- 
-    const goToMenu = () => {
-        console.log("Ir a Horario");
-        navigation.replace("Horario");
-    };
+
 
     buttonAceptModal = () => {
         setModalVisible(!modalVisible);

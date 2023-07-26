@@ -9,6 +9,8 @@ import { messages } from '../common/messages';
 import { letter, number, specialCaracter } from '../services/validations';
 import { CContext } from '../context/CContext';
 import axios from 'axios';
+import ModalC from '../components/ModalC';
+import ReturnButton from '../components/ReturnButton';
 
 const UpdatePassword = ({ navigation }) => {
     const [oldPassword, setOldPassword] = useState("");
@@ -21,28 +23,35 @@ const UpdatePassword = ({ navigation }) => {
     const [iconVisibility1, setIconVisibility1] = useState(true);
     const [iconVisibility2, setIconVisibility2] = useState(true);
     const { token } = useContext(CContext);
+    const [message, setMessege] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    buttonAceptModal = ()=>{
+        setModalVisible(false);
+    }
 
     const updatePassword = async () => {
         try {
-          const response = await axios.post(
-            'https://endpointsco-production.up.railway.app/api/update-password',
-            {
-                password_current: oldPassword,
-                password: password,
-                password_confirm: confirmPassword
-            },
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          console.log(response.data);
-          verify();
-          navigation.navigate("Profile");
+            const response = await axios.post(
+                'https://endpointsco-production.up.railway.app/api/update-password',
+                {
+                    password_current: oldPassword,
+                    password: password,
+                    password_confirm: confirmPassword
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+            console.log(response.data);
+            verify();
+            setMessege(response.data.message);
+            setModalVisible(true);
         } catch (error) {
-          console.log(error);
+            console.log(error);
 
         }
-      };
+    };
 
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
@@ -229,7 +238,18 @@ const UpdatePassword = ({ navigation }) => {
                     />
 
                 </View>
+               
+                <ModalC
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    onAccept={buttonAceptModal}
+                    modalText={message}
+                    showCancelButton={false}
+                    imageModal={require('../../assets/checked.png')}
+                    acceptButtonText="Aceptar"
+                />
             </ScrollView>
+            <ReturnButton onPress={()=> navigation.goBack()} />
         </Principal>
     );
 }

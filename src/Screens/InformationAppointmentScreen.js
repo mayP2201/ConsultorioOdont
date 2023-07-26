@@ -18,10 +18,10 @@ const InformationAppointment = () => {
   const { token, userDataContext } = useContext(CContext);
   const [appointment, setAppointment] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [message, setMessege] = useState(null);
 
+  const [message, setMessege] = useState(null);
+  console.log("------------------->",token);
   const getAppointmentAll = async () => {
-    console.log("----userData", userDataContext);
     try {
       const response = await axios.get(
         'https://endpointsco-production.up.railway.app/api/getAppointmentsUser',
@@ -29,27 +29,53 @@ const InformationAppointment = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("---->DATOS GENERALES DE CITA--->", response.data);
-      const allAppointments = response.data.flat(); // Aplanar el array anidado
+
+      const allAppointments = response.data.flat();
       const patientAppointments = allAppointments.filter(
-        (appointment) => appointment.identity_card_user == userDataContext.identity_card_user &&
+        (appointment) =>
+          appointment.identity_card_user == userDataContext.identity_card_user &&
           appointment.id_status == 2
       );
-      console.log("cita de miiiii perfil ", patientAppointments);
-      setAppointment(patientAppointments);
+
+      // Obtener los IDs de los pacientes de las citas
+      const patientIds = patientAppointments.map((appointment) => appointment.id_patient);
+
+      // Realizar una consulta para obtener los nombres y apellidos de los pacientes
+      const patientNamesPromises = patientIds.map((id) =>
+        axios.get(`https://endpointsco-production.up.railway.app/api/get-user/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      );
+
+      const patientNamesResponses = await Promise.all(patientNamesPromises);
+      const patientNames = patientNamesResponses.map((response) => {
+        const patientData = response.data;
+        return `${patientData.names} ${patientData.surnames}`;
+      });
+
+      // Combinar los datos de las citas con los nombres de los pacientes
+      const combinedData = patientAppointments.map((appointment, index) => ({
+        id: appointment.id,
+        patientName: patientNames[index],
+        date: appointment.date,
+        time: appointment.start_time,
+      }));
+
+      setAppointment(combinedData);
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getAppointmentAll();
   }, []);
-  const tableHead = ['Fecha', 'Hora', 'Acción'];
+
+  const tableHead = ['Nombre del Paciente', 'Fecha', 'Hora'];
   const tableData = appointment.map((appoint) => [
-    appoint.id,
-    appoint.id_patient,
+    appoint.patientName,
     appoint.date,
-    appoint.start_time,
+    appoint.time,
   ]);
 
   return (
@@ -58,12 +84,15 @@ const InformationAppointment = () => {
       <View>
         <Text style={commonStyles.textTile}>LISTA DE CITAS</Text>
         <Text style={commonStyles.textDescription}>Listado de citas pendientes</Text>
-        <Text>{userDataContext.names} {userDataContext.surnames}</Text>
+        <View style={styles.contentPatient}>
+            <Text style = {styles.patient}>Odont: </Text>
+            <Text style = {styles.namePatient}>{userDataContext.names} {userDataContext.surnames}</Text>
+          </View>
         <View style={styles.containerTable}>
-          <Table borderStyle={{ borderWidth: 2, borderRadius: 15 }}>
+          <Table borderStyle={{ borderWidth: 1, borderColor: colors.blue }}>
             <Row data={tableHead} style={styles.head} textStyle={styles.headText} />
             {tableData.map((rowData, index) => (
-              <Row key={index} data={rowData} style={styles.row} textStyle={styles.text} />
+              <Row key={index} data={rowData} style={styles.row} textStyle={styles.text}/>
             ))}
           </Table>
         </View>
@@ -99,6 +128,23 @@ const styles = StyleSheet.create({
     margin: '5%',
     textAlign: 'center',
   },
+  contentPatient:{
+    flex:1, 
+    flexDirection:'row', 
+    //backgroundColor:'yellow', 
+    marginLeft:'5%', 
+    marginTop:'10%'
+  },
+
+  patient:
+  {
+    color: colors.blue,
+    fontWeight:'bold'
+  },
+
+  namePatient:{
+    color: colors.lightBlue
+  }
 })
 
 export default InformationAppointment;

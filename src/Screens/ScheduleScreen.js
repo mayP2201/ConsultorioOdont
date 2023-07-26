@@ -13,20 +13,25 @@ import axios from 'axios';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Button } from 'react-native-elements';
+import ReturnButton from '../components/ReturnButton';
 
 
 
 export const Schedule = ({ navigation }) => {
   const [selectDoctor, setSelectDoctor] = useState(null);
-  const { token, appointmentContext, doctorDataContext, handleChangeappointmentContext, handleChangedoctorDataContext
+  const { token, appointmentContext, doctorDataContext, handleChangeappointmentContext, handleChangevisibleModal, handleChangedoctorDataContext
   } = useContext(CContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCell, setSelectedCell] = useState(null);
   const [appointmentData, setAppointmentData] = useState([]);
   const [data, setData] = useState([]);
   const [messege, setMessege] = useState("");
- 
+  const [userData, setUserData] = useState([]);
+  const { userDataContext } = useContext(CContext);
+
+
   const getDoctorData = async () => {
+    handleChangevisibleModal(true);
     try {
       const response = await axios.get(
         `https://endpointsco-production.up.railway.app/api/get-users/${2}`,
@@ -45,6 +50,7 @@ export const Schedule = ({ navigation }) => {
       );
       //console.log(opcionDoctor);
       setData(opcionDoctor);
+      handleChangevisibleModal(false);
     } catch (error) {
       console.log(error);
     }
@@ -55,6 +61,7 @@ export const Schedule = ({ navigation }) => {
   }, []);
 
   const getAppointment = async (idDoctor) => {
+    handleChangevisibleModal(true);
     try {
       const response = await axios.get(
         `https://endpointsco-production.up.railway.app/api/getAppointmentsByDentist/${idDoctor}`,
@@ -64,6 +71,7 @@ export const Schedule = ({ navigation }) => {
       );
       setAppointmentData(response.data);
       //console.log(response.data);
+      handleChangevisibleModal(false);
     } catch (error) {
       console.log(error);
     }
@@ -140,8 +148,6 @@ export const Schedule = ({ navigation }) => {
   const buttonAceptModal = () => {
     setModalVisible(!modalVisible);
   }
-
-
 
   return (
     <Principal>

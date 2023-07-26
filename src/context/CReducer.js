@@ -1,4 +1,4 @@
-import { LOAD_TOKEN, LOAD_USERDATACONTEXT, LOAD_DOCTORDATACONTEXT,LOAD_APPOINTMENTCONTEXT } from "./CTypes"
+import { LOAD_TOKEN, LOAD_USERDATACONTEXT, LOAD_DOCTORDATACONTEXT,LOAD_APPOINTMENTCONTEXT, LOAD_VISIBLEMODAL,  } from "./CTypes"
 
 
 export const CReducer = (state, action) => {
@@ -26,6 +26,12 @@ export const CReducer = (state, action) => {
             return {
                 ...state,
                 appointmentContext: payload,
+            };
+        }
+        case LOAD_VISIBLEMODAL: {
+            return {
+                ...state,
+                visibleModal: payload,
             };
         }
         default:
