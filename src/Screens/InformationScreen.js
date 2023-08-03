@@ -93,9 +93,10 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     backgroundColor: colors.base,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '10%'
+    flex:1,
+    justifyContent:'flex-end',
+    alignItems:'center',
+  
   },
   infoTextContent: {
     //backgroundColor: 'yellow',

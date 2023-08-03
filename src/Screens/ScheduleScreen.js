@@ -1,34 +1,23 @@
 import { View, Text, StyleSheet, Platform } from 'react-native'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import Calendar from 'react-native-big-calendar'
 import Principal from '../components/Principal';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { colors, commonStyles } from '../common/globalStyle';
 import { ScrollView } from 'react-native-gesture-handler';
 import ModalC from '../components/ModalC';
-import { useContext } from 'react';
 import { CContext } from '../context/CContext';
-import { useEffect } from 'react';
 import axios from 'axios';
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import { Button } from 'react-native-elements';
-import ReturnButton from '../components/ReturnButton';
-
-
 
 export const Schedule = ({ navigation }) => {
   const [selectDoctor, setSelectDoctor] = useState(null);
-  const { token, appointmentContext, doctorDataContext, handleChangeappointmentContext, handleChangevisibleModal, handleChangedoctorDataContext
+  const {
+    token, appointmentContext, doctorDataContext, handleChangeappointmentContext, handleChangevisibleModal, handleChangedoctorDataContext
   } = useContext(CContext);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedCell, setSelectedCell] = useState(null);
   const [appointmentData, setAppointmentData] = useState([]);
   const [data, setData] = useState([]);
   const [messege, setMessege] = useState("");
-  const [userData, setUserData] = useState([]);
-  const { userDataContext } = useContext(CContext);
-
 
   const getDoctorData = async () => {
     handleChangevisibleModal(true);
@@ -199,7 +188,7 @@ export const Schedule = ({ navigation }) => {
           />
         </View>
       </ScrollView>
-    </Principal >
+    </Principal>
   )
 }
 

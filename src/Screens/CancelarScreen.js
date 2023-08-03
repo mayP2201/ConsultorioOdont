@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { Text } from 'react-native';
 import { View, StyleSheet } from 'react-native';
 import Principal from '../components/Principal';
@@ -15,9 +16,11 @@ import ModalC from '../components/ModalC';
 import ReturnButton from '../components/ReturnButton';
 
 
-const Cancelar = ({ navigation }) => {
+export const Cancelar = ({ navigation }) => {
 
-  const { token, userDataContext, handleChangevisibleModal} = useContext(CContext);
+  const {
+    token, userDataContext, handleChangevisibleModal, handleChangeappointmentContext }
+    = useContext(CContext);
   const [appointment, setAppointment] = useState([]);
   const [idAppointment, setIdAppointment] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -46,6 +49,19 @@ const Cancelar = ({ navigation }) => {
       console.log(error);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Hacer algo cuando la pantalla está enfocada
+      console.log('La pantalla está enfocada');
+      getAppointmentAll();
+
+      return () => {
+        // Hacer algo cuando la pantalla se desenfoca
+        console.log('La pantalla se desenfoca');
+      };
+    }, [])
+  );
   useEffect(() => {
     getAppointmentAll();
   }, []);
@@ -64,6 +80,9 @@ const Cancelar = ({ navigation }) => {
       console.log("cancelar cita -->", response.data);
       handleChangevisibleModal(false);
       setMessege(response.data.message);
+      setAppointment((prevAppointments) =>
+        prevAppointments.filter((appointment) => appointment.id !== id_cita)
+      );
     } catch (error) {
       console.log("error tomar citas", error);
 
@@ -88,17 +107,16 @@ const Cancelar = ({ navigation }) => {
     </View>
   ]);
 
-  buttonAceptModal = () => {
+  const buttonAceptModal = () => {
     cancelAppointment(idAppointment);
     setModalVisible(false);
-
+    console.log("id de la cita para cancelar", idAppointment);
   }
-  console.log("id de la cita para cancelar", idAppointment);
 
   const showMessage = () => {
     setTimeout(() => {
       setMessege('');
-    }, 7000);
+    }, 8000);
   };
 
   const buttonAppointmentModal = (navigate) => {
@@ -114,11 +132,11 @@ const Cancelar = ({ navigation }) => {
           <Text style={commonStyles.textDescription}>Cancela tu cita aqui</Text>
           <Text style={styles.cancel}>{message} {showMessage()}</Text>
           <View style={styles.contentPatient}>
-            <Text style = {styles.patient}>Paciente: </Text>
-            <Text style = {styles.namePatient}>{userDataContext.names} {userDataContext.surnames}</Text>
+            <Text style={styles.patient}>Paciente: </Text>
+            <Text style={styles.namePatient}>{userDataContext.names} {userDataContext.surnames}</Text>
           </View>
           <View style={styles.containerTable}>
-            <Table borderStyle={{ borderWidth: 1, borderColor: colors.blue}}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: colors.blue }}>
               <Row data={tableHead} style={styles.head} textStyle={styles.headText} />
               {tableData.map((rowData, index) => (
                 <Row key={index} data={rowData} style={styles.row} textStyle={styles.text} />
@@ -138,7 +156,7 @@ const Cancelar = ({ navigation }) => {
           />
         </View>
       </ScrollView>
-      <ReturnButton onPress={()=> navigation.goBack()} />
+      <ReturnButton onPress={() => navigation.goBack()} />
     </Principal>
   );
 }
@@ -151,7 +169,7 @@ const styles = StyleSheet.create({
   containerTable: {
     //marginTop: '10%',
     marginHorizontal: '5%',
-    marginTop:'5%'
+    marginTop: '5%'
 
   },
   head: {
@@ -172,30 +190,30 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.blue
   },
-  contentPatient:{
-    flex:1, 
-    flexDirection:'row', 
+  contentPatient: {
+    flex: 1,
+    flexDirection: 'row',
     //backgroundColor:'yellow', 
-    marginLeft:'5%', 
-    marginTop:'5%'
+    marginLeft: '5%',
+    marginTop: '5%'
   },
 
   patient:
   {
     color: colors.blue,
-    fontWeight:'bold'
+    fontWeight: 'bold'
   },
 
-  namePatient:{
+  namePatient: {
     color: colors.lightBlue
   },
-  cancel:{
-    textAlign:'center',
-    fontWeight:'bold',
+  cancel: {
+    textAlign: 'center',
+    fontWeight: 'bold',
     color: 'red',
-    fontSize:12,
-    marginTop:'5%'
+    fontSize: 12,
+    marginTop: '5%'
   }
 })
 
-export default Cancelar;
+

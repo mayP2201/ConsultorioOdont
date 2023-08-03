@@ -31,7 +31,7 @@ const Login = ({ navigation }) => {
                 password: password
             })
             .then(async response => {
-                console.log(response.data);
+                console.log("--> ",response.data);
                 const tok = response.data.token;
                 handleChangeToken(tok);
                 const response1 = await axios.get(
@@ -40,6 +40,7 @@ const Login = ({ navigation }) => {
                         headers: { Authorization: `Bearer ${tok}` },
                     }
                 );
+                console.log("response 1 ",response1.data)
                 handleChangeuserDataContext(response1.data);
                 handleChangevisibleModal(false);
             })
@@ -52,7 +53,6 @@ const Login = ({ navigation }) => {
     passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
-
 
     const verifyEmail = (email) => {
         if (validateEmail1(email)) {
@@ -82,6 +82,7 @@ const Login = ({ navigation }) => {
 
     buttonAceptModal = () => {
         setModalVisible(!modalVisible);
+        handleChangevisibleModal(false);
     }
 
     return (

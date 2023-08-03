@@ -24,7 +24,7 @@ export const CStates = ({ children }) => {
     }, []);
 
     const handleChangeuserDataContext = useCallback((userDataContext) => {
-        console.log("userDataCstates-->", userDataContext);
+        // console.log("userDataCstates-->", userDataContext);
         dispatch({ type: LOAD_USERDATACONTEXT, payload: userDataContext });
     }, []);
 
