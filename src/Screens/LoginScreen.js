@@ -89,7 +89,7 @@ const Login = ({ navigation }) => {
             });
     };
 
-    passwordVisibility = () => {
+    const passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
 

@@ -64,11 +64,11 @@ const Register = ({ navigation }) => {
                 setModalVisibleError(true); 
             });
     };
-    passwordVisibility = () => {
+    const passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
 
-    passwordVisibility1 = () => {
+    const passwordVisibility1 = () => {
         setIconVisibility1(!iconVisibility1);
     }
     verifyId = (id) => {
@@ -265,7 +265,7 @@ const Register = ({ navigation }) => {
 
         return true;
     };
-    buttonAcept = () => {
+    const buttonAcept = () => {
         goToLogin();
     }
 

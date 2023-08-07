@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.lightBlue,
     height: Dimensions.get("window").height * (100 / 1000),
-    marginTop: -22,
+    marginTop: '-16%',
   },
   logo: {
     marginLeft: 10,

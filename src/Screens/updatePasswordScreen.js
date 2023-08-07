@@ -22,15 +22,19 @@ const UpdatePassword = ({ navigation }) => {
     const [iconVisibility, setIconVisibility] = useState(true);
     const [iconVisibility1, setIconVisibility1] = useState(true);
     const [iconVisibility2, setIconVisibility2] = useState(true);
-    const { token } = useContext(CContext);
+    const { token, handleChangevisibleModal} = useContext(CContext);
     const [message, setMessege] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisibleError, setModalVisibleError] = useState(false);
 
-    buttonAceptModal = ()=>{
+    const buttonAceptModal = ()=>{
         setModalVisible(false);
+        handleChangevisibleModal(false);
+        navigation.goBack();
     }
 
     const updatePassword = async () => {
+        handleChangevisibleModal(true);
         try {
             const response = await axios.post(
                 'https://endpointsco-production.up.railway.app/api/update-password',
@@ -46,22 +50,24 @@ const UpdatePassword = ({ navigation }) => {
             console.log(response.data);
             verify();
             setMessege(response.data.message);
+            handleChangevisibleModal(false);
             setModalVisible(true);
         } catch (error) {
-            console.log(error);
-
+            console.log(error.message);
+            setModalVisibleError(true);
+            handleChangevisibleModal(false);
         }
     };
 
-    passwordVisibility = () => {
+    const passwordVisibility = () => {
         setIconVisibility(!iconVisibility);
     }
 
-    passwordVisibility1 = () => {
+    const passwordVisibility1 = () => {
         setIconVisibility1(!iconVisibility1);
     }
 
-    passwordVisibility2 = () => {
+    const passwordVisibility2 = () => {
         setIconVisibility2(!iconVisibility2);
     }
 
@@ -157,6 +163,11 @@ const UpdatePassword = ({ navigation }) => {
 
         return true;
     };
+    const buttonAceptModalError = ()=>{
+        setModalVisibleError(false);
+        handleChangevisibleModal(false);
+    }
+
     return (
         <Principal>
             <ScrollView>
@@ -238,7 +249,6 @@ const UpdatePassword = ({ navigation }) => {
                     />
 
                 </View>
-               
                 <ModalC
                     modalVisible={modalVisible}
                     setModalVisible={setModalVisible}
@@ -246,6 +256,15 @@ const UpdatePassword = ({ navigation }) => {
                     modalText={message}
                     showCancelButton={false}
                     imageModal={require('../../assets/checked.png')}
+                    acceptButtonText="Aceptar"
+                />
+                <ModalC
+                    modalVisible={modalVisibleError}
+                    setModalVisible={setModalVisibleError}
+                    onAccept={buttonAceptModalError}
+                    modalText= "Ingrese las contraseñas correctas"
+                    showCancelButton={false}
+                    imageModal={require('../../assets/attention.png')}
                     acceptButtonText="Aceptar"
                 />
             </ScrollView>

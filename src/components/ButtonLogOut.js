@@ -16,7 +16,6 @@ const ButtonLogOut = (props) => {
   const { text, type, size, name, onPress } = props;
   const [message, setMessege] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  
 
   const logout = async () => {
     handleChangevisibleModal(true);
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     backgroundColor: colors.silverBtnLogOut,
-    marginTop: '160%',
+    marginTop: Dimensions.get("window").height * (300 / 1000) + StatusBar.currentHeight,
     padding: 15,
     alignItems: 'center',
     flexDirection: 'row',

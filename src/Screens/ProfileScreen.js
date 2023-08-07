@@ -30,22 +30,21 @@ const Profile = ({ navigation }) => {
     const [errorId, setErrorId] = useState("");
     const [address, setAddress] = useState("");
     const [errorAddress, setErrorAddress] = useState("");
-    const [errorImage, setErrorImage] = useState("");
     const [viewName, setViewName] = useState(false);
     const [editable, setEditable] = useState(false);
-    const { token } = useContext(CContext);
+    const { token, handleChangevisibleModal} = useContext(CContext);
     const [userData, setUserData] = useState([]);
-    const [newAvatar, setNewAvatar] = useState("");
-    const [imageName, setImageName] = useState("");
     const { userDataContext } = useContext(CContext);
     const [message, setMessege] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisibleError, setModalVisibleError] = useState(false);
+
 
     useEffect(() => {
         viewData();
       }, []);
     const updateUserData = async () => {
-
+        handleChangevisibleModal(true);
         try {
             if (verify()) {
                 const response = await axios.post(
@@ -66,13 +65,16 @@ const Profile = ({ navigation }) => {
                 // union de dos objetos el uno se sobre pone al otro 
                 setUserData({ ...userData, ...{ names: name, surnames: lastName, email: email, phone: phone, address: address } });
                 setMessege(response.data.message);
+                handleChangevisibleModal(false);
                 setModalVisible(true);
 
             } else {
                 console.log("datos erroneos")
             }
         } catch (error) {
-            console.log(error);
+            setModalVisibleError(true);
+            handleChangevisibleModal(false);
+            
         }
     };
 
@@ -125,7 +127,7 @@ const Profile = ({ navigation }) => {
     }
 
 
-    editBoton = () => {
+    const editBoton = () => {
         setViewName(!viewName);
         setEditable(!editable);
     }
@@ -151,7 +153,6 @@ const Profile = ({ navigation }) => {
             setErrorEmail(messages.EMAIL_INCORRECT);
             setErrorPhone(messages.PHONE_INCORRECT);
             setErrorAddress(messages.ADDRESS_INCORRECT);
-            setErrorImage(messages.NOT_LOAD_IMAGE);
         }
         else {
             console.log("todo mal primer else");
@@ -161,7 +162,6 @@ const Profile = ({ navigation }) => {
             setErrorEmail(null);
             setErrorPhone(null);
             setErrorAddress(null);
-            setErrorImage(null);
         }
         console.log("validando uno ", validate());
         if (validate()) {
@@ -172,7 +172,6 @@ const Profile = ({ navigation }) => {
             setErrorEmail("");
             setErrorPhone("");
             setErrorAddress("")
-            setErrorImage("")
             //setModalVisible(true);
             return true;
         }
@@ -220,12 +219,17 @@ const Profile = ({ navigation }) => {
         setEmail(userDataContext.email);
         setPhone(userDataContext.phone);
         setAddress(userDataContext.address);
-        //setNewAvatar(userData.image);
-
     }
 
-    buttonAceptModal = ()=>{
+    const buttonAceptModal = ()=>{
         setModalVisible(false);
+        handleChangevisibleModal(false);
+        navigation.goBack();
+    }
+
+    const buttonAceptModalError = () =>{
+        setModalVisibleError(false);
+        handleChangevisibleModal(false);
     }
     return (
         <Principal>
@@ -368,6 +372,15 @@ const Profile = ({ navigation }) => {
                     modalText={message}
                     showCancelButton={false}
                     imageModal={require('../../assets/checked.png')}
+                    acceptButtonText="Aceptar"
+                />
+                <ModalC
+                    modalVisible={modalVisibleError}
+                    setModalVisible={setModalVisibleError}
+                    onAccept={buttonAceptModalError}
+                    modalText= 'Verifique los datos ingresados'
+                    showCancelButton={false}
+                    imageModal={require('../../assets/attention.png')}
                     acceptButtonText="Aceptar"
                 />
             </ScrollView>
