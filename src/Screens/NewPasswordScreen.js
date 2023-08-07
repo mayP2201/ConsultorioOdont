@@ -8,11 +8,15 @@ import { letter, number, specialCaracter } from '../services/validations';
 import { messages } from '../common/messages';
 import axios from 'axios';
 import ModalC from '../components/ModalC';
+import ReturnButton from '../components/ReturnButton';
+import { useContext } from 'react';
+import { CContext } from '../context/CContext';
 
 const NewPassword = (props) => {
     console.log(props)
     const { navigation } = props;
     const {code} = props.route.params;
+    const { handleChangevisibleModal } = useContext(CContext);
     //const { code, handleChangeCode } = useContext(CContext); // Uso de context
     const [password, setPassword] = useState("");
     const [errorPassword, setErrorPassword] = useState("");
@@ -24,6 +28,7 @@ const NewPassword = (props) => {
 
 
     const resetPassword = async () => {
+        handleChangevisibleModal(true);
         try {
           const response = await axios.post('https://endpointsco-production.up.railway.app/api/reset-password', { 
             code: code,
@@ -31,6 +36,7 @@ const NewPassword = (props) => {
             password_confirm: confirmPassword
            });
            verify();
+           handleChangevisibleModal(false);
            navigation.navigate('Login');
         } catch (error) {
             setModalVisibleError(true);
@@ -112,13 +118,14 @@ const NewPassword = (props) => {
 
     buttonAceptError = () => {
         setModalVisibleError(false);
+        handleChangevisibleModal(false);
     }
 
     return (
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={commonStyles.textTile}>RECUPERAR</Text>
+                    <Text style={commonStyles.textTile}>REESTABLECER</Text>
                     <Text style={styles.textTile1}>CONTRASEÑA</Text>
                     <Text style={commonStyles.textDescription}>Escribe tu nueva contraseña de minimo ocho caracteres</Text>
                     <View style={styles.principalContainer}>
@@ -191,6 +198,7 @@ const NewPassword = (props) => {
                     </View>
                 </View>
             </ScrollView>
+            <ReturnButton onPress={() => navigation.goBack()} />
         </Principal>
     );
 }
@@ -209,7 +217,7 @@ const styles = StyleSheet.create({
         color: colors.blue,
         textAlign: 'center',
         maxWidth: '100%',
-        backgroundColor: 'yellow'
+        //backgroundColor: 'yellow'
     },
 
     InputContainer: {

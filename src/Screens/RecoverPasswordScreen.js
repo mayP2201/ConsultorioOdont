@@ -8,6 +8,9 @@ import { messages } from '../common/messages';
 import { useState } from 'react';
 import axios from 'axios';
 import ModalC from '../components/ModalC';
+import { useContext } from 'react';
+import { CContext } from '../context/CContext';
+import ReturnButton from '../components/ReturnButton';
 
 const RecoverPassword = ({ navigation }) => {
 
@@ -15,7 +18,7 @@ const RecoverPassword = ({ navigation }) => {
     const [errorEmail, setErrorEmail] = useState();
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisibleError, setModalVisibleError] = useState(false);
-    
+    const { handleChangevisibleModal } = useContext(CContext);
 
     const verifyEmail = (email) => {
         if (validateEmail1(email)) {
@@ -39,7 +42,7 @@ const RecoverPassword = ({ navigation }) => {
             console.log("Guardando....");
             setErrorEmail("");
             setModalVisible(true);
-            
+
         }
         else {
             console.log("error");
@@ -58,18 +61,21 @@ const RecoverPassword = ({ navigation }) => {
 
     buttonAcept = () => {
         navigation.navigate('Code');
+        setModalVisible(false);
+        handleChangevisibleModal(false);
     }
 
     buttonAceptError = () => {
         setModalVisibleError(false);
     }
     const handleForgotPassword = async () => {
+        handleChangevisibleModal(true);
         try {
             const response = await axios.post('https://endpointsco-production.up.railway.app/api/forgot-password',
                 { email }
             );
             verify();
-            
+            handleChangevisibleModal(false);
         } catch (error) {
             setModalVisibleError(true);
         }
@@ -79,7 +85,7 @@ const RecoverPassword = ({ navigation }) => {
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={commonStyles.textTile}>RECUPERAR</Text>
+                    <Text style={commonStyles.textTile}>REESTABLECER</Text>
                     <Text style={styles.textTile1}>CONTRASEÑA</Text>
                     <Text style={commonStyles.textDescription}>Escribe tu correo electrónico para cambiar tu contraseña</Text>
                     <View style={styles.principalContainer}>
@@ -149,6 +155,7 @@ const RecoverPassword = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
+            <ReturnButton onPress={() => navigation.goBack()} />
         </Principal>
     );
 }

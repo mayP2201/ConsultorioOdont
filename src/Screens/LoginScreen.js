@@ -11,6 +11,8 @@ import { Icon } from 'react-native-elements';
 import axios from 'axios';
 import { CContext } from '../context/CContext';
 import { useContext } from 'react';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
 
 const Login = ({ navigation }) => {
 
@@ -21,14 +23,51 @@ const Login = ({ navigation }) => {
     const [iconVisibility, setIconVisibility] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [data, setData] = useState([]);
-    const { token, handleChangeToken, handleChangeuserDataContext, handleChangevisibleModal } = useContext(CContext);
+    const { handleChangeToken, handleChangeuserDataContext, handleChangevisibleModal } = useContext(CContext);
+    const [expoPushToken, setExpoPushToken] = useState('');
+
+    async function registerForPushNotificationsAsync() {
+        let token;
+        if (Device.isDevice) {
+            const { status: existingStatus } = await Notifications.getPermissionsAsync();
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+                const { status } = await Notifications.requestPermissionsAsync();
+                finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+                alert('Failed to get push token for push notification!');
+                return;
+            }
+            // Agrega el projectId en el segundo parámetro de getExpoPushTokenAsync
+            token = (await Notifications.getExpoPushTokenAsync({ projectId: 'e063b1df-cfaa-4e26-9303-65ba225954e3' })).data;
+        } else {
+            alert('Must use physical device for Push Notifications');
+        }
+
+        if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: '#FF231F7C',
+            });
+        }
+
+        return token;
+    }
+
+    useEffect(() => {
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    }, []);
 
     const handleLogin = () => {
         handleChangevisibleModal(true);
         axios
             .post('https://endpointsco-production.up.railway.app/api/login', {
                 email: email,
-                password: password
+                password: password,
+                tokenDevice: expoPushToken
             })
             .then(async response => {
                 console.log("--> ",response.data);

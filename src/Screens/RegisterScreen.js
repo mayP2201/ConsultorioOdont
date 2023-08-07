@@ -276,6 +276,8 @@ const Register = ({ navigation }) => {
 
     const buttonAceptModalError = () => {
         setModalVisibleError(false);
+        handleChangevisibleModal(false);
+        
     }
 
     return (

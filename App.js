@@ -34,13 +34,14 @@ const StackAuthenticatedPatient = createNativeStackNavigator();
 
 const MenuItems = ({ navigation }) => {
   return (
-    <DrawerContentScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <DrawerContentScrollView style={styles.container} showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={false}>
       <View style={styles.headerArea}>
       </View>
       <Image
         source={require("./assets/logo.png")}
         style={{
-          width: Dimensions.get("window").width * (450 / 1000),
+          width: Dimensions.get("window").width * (440 / 1000),
           height: Dimensions.get("window").height * (100 / 1000) + StatusBar.currentHeight,
           margin: '5%',
         }}
@@ -75,7 +76,7 @@ const MenuItems = ({ navigation }) => {
         size={26}
       />
 
-      <ButtonLogOut text={'Cerrar Sesión'} onPress={() => {}}
+      <ButtonLogOut text={'Cerrar Sesión'} onPress={() => { }}
         name={'deleteuser'} type={'antdesign'}
       />
     </DrawerContentScrollView>
@@ -110,7 +111,7 @@ const MenuItems1 = ({ navigation }) => {
         size={26}
       />
 
-      <ButtonLogOut text={'Cerrar Sesión'} onPress={() => {}}
+      <ButtonLogOut text={'Cerrar Sesión'} onPress={() => { }}
         name={'deleteuser'} type={'antdesign'} />
 
     </DrawerContentScrollView>
@@ -123,7 +124,7 @@ const DrawerNav = () => {
       drawerContent={(props) => <MenuItems {...props} />}
       screenOptions={{
         drawerStyle: {
-          width: Dimensions.get("window").width / 2,
+          width: Dimensions.get("window").width / 1.95,
         },
       }}
     >
@@ -168,7 +169,7 @@ const DrawerNav1 = () => {
       drawerContent={(props) => <MenuItems1 {...props} />}
       screenOptions={{
         drawerStyle: {
-          width: Dimensions.get("window").width / 2,
+          width: Dimensions.get("window").width / 1.95,
         },
       }}
     >
@@ -244,23 +245,19 @@ const InitFunction = () => {
   useEffect(() => {
     console.log("user Context -->", userDataContext);
   }, [userDataContext]);
-  
-    return (<NavigationContainer>
-      {
-        !userDataContext && <UnAtentication></UnAtentication>
 
-      }
-      {
-
-        userDataContext && userDataContext.rol_id == 2 && <AutenticatorDoctor></AutenticatorDoctor>
-
-      }
-      {
-        userDataContext && userDataContext.rol_id === 3 && <AutenticatorPatient />
-
-      }
-    </NavigationContainer>
-    )
+  return (<NavigationContainer>
+    {
+      !userDataContext && <UnAtentication></UnAtentication>
+    }
+    {
+      userDataContext && userDataContext.rol_id == 2 && <AutenticatorDoctor></AutenticatorDoctor>
+    }
+    {
+      userDataContext && userDataContext.rol_id === 3 && <AutenticatorPatient />
+    }
+  </NavigationContainer>
+  )
 
 }
 
@@ -279,9 +276,10 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height + StatusBar.currentHeight,
   },
   headerArea: {
-    backgroundColor: colors.light,
-    height: Dimensions.get("window").height * (99 / 1000),
-    marginTop: -34,
+    flex: 1,
+    backgroundColor: colors.lightBlue,
+    height: Dimensions.get("window").height * (100 / 1000),
+    marginTop: -22,
   },
   logo: {
     marginLeft: 10,

@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ModalC from '../components/ModalC';
 import { CContext } from '../context/CContext';
 import axios from 'axios';
+import ReturnButton from '../components/ReturnButton';
 
 export const Schedule = ({ navigation }) => {
   const [selectDoctor, setSelectDoctor] = useState(null);
@@ -17,7 +18,8 @@ export const Schedule = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [appointmentData, setAppointmentData] = useState([]);
   const [data, setData] = useState([]);
-  const [messege, setMessege] = useState("");
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+  const [message, setMessege] = useState('');
 
   const getDoctorData = async () => {
     handleChangevisibleModal(true);
@@ -79,7 +81,6 @@ export const Schedule = ({ navigation }) => {
       );
 
       console.log("tomar cita actualizacion -->", response.data);
-      setMessege(response.data.message);
     } catch (error) {
       console.log("error tomar citas", error);
 
@@ -87,22 +88,19 @@ export const Schedule = ({ navigation }) => {
   };
 
   const selectAppointment = (event) => {
-    setModalVisible(true);
-    console.log("----->even de select", event)
-    let result = Object.assign([], appointmentData);
-    //console.log("result", result);
-    result = result.map((item) => {
-      return item.map((item) => {
-        return {
-          ...item,
-          ...{
-            id_status: event.id == item.id ? 2 : item.id_status
-          }
-        }
-      })
-    });
-    takeAppointment(event.id);
-    setAppointmentData(result);
+    if (event.id_status == 1) {
+      setModalVisible(true);
+      setSelectedAppointmentId(event.id);
+    }
+    else {
+      setMessege("Cita no disponible");
+    }
+  };
+
+  const showMessage = () => {
+    setTimeout(() => {
+      setMessege('');
+    }, 8000);
   };
 
   const doctorSelector = (selectDoctor) => {
@@ -134,8 +132,27 @@ export const Schedule = ({ navigation }) => {
       return { backgroundColor: colors.blue };
     }
   };
-  const buttonAceptModal = () => {
-    setModalVisible(!modalVisible);
+  const buttonAceptModal = async () => {
+    setModalVisible(true);
+    let result = Object.assign([], appointmentData);
+    //console.log("result", result);
+    result = result.map((item) => {
+      return item.map((item) => {
+        return {
+          ...item,
+          ...{
+            id_status: selectedAppointmentId == item.id ? 2 : item.id_status
+          }
+        }
+      })
+    });
+    takeAppointment(selectedAppointmentId);
+    setAppointmentData(result);
+    setModalVisible(false);
+  };
+
+  const buttonCancel = () => {
+    setModalVisible(false);
   }
 
   return (
@@ -144,6 +161,7 @@ export const Schedule = ({ navigation }) => {
         <View>
           <Text style={commonStyles.textTile}>CITAS</Text>
           <Text style={commonStyles.textDescription}>Selecciona una cita odontológica</Text>
+          <Text style={styles.cancel}>{message} {showMessage()}</Text>
           <SelectList
             data={data}
             setSelected={doctorSelector}
@@ -173,18 +191,21 @@ export const Schedule = ({ navigation }) => {
               hourRowHeight={50}
               style={{ backgroundColor: 'white', borderWidth: 1, borderColor: 'gray' }}
               headerContentStyle={{ paddingHorizontal: '5%', position: 'absolute' }}
-              mode="week"
+              mode="custom"
               weekStartsOn={1}
+              scrollOffsetMinutes={420}
             />
           </View>
           <ModalC
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
             onAccept={buttonAceptModal}
-            modalText={messege}
-            showCancelButton={false}
+            onCancel={buttonCancel}
+            modalText="¿Esta seguro de tomar la cita odontológica?"
+            showCancelButton={true}
             imageModal={require('../../assets/checked.png')}
             acceptButtonText="Aceptar"
+            cancelButtonText="Cancelar"
           />
         </View>
       </ScrollView>
@@ -276,5 +297,12 @@ const styles = StyleSheet.create({
     marginTop: '5%',
     margin: '7%'
   },
+  cancel: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: 'red',
+    fontSize: 12,
+    marginTop: '5%'
+  }
 
 })

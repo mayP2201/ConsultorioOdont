@@ -122,6 +122,7 @@ export const Cancelar = ({ navigation }) => {
   const buttonAppointmentModal = (navigate) => {
     cancelAppointment(idAppointment);
     navigation.navigate("Schedule");
+    setModalVisible(false);
   }
 
   return (

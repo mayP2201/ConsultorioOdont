@@ -56,7 +56,6 @@ const Profile = ({ navigation }) => {
                         email: email,
                         phone: phone,
                         address: address,
-                        //image: imageName,
                         profesional_descrption: "",
                     },
                     {
@@ -75,7 +74,6 @@ const Profile = ({ navigation }) => {
         } catch (error) {
             console.log(error);
         }
-
     };
 
     passwordVisibility = () => {
@@ -226,38 +224,6 @@ const Profile = ({ navigation }) => {
 
     }
 
-    const selectImage = async () => {
-        try {
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
-
-            if (result.canceled) {
-                throw new Error("La cámara fue cancelada.");
-            } if (!result.canceled) {
-                setNewAvatar(result.assets[0].uri);
-                const imageUri = result.assets[0].uri;
-                const fileName = imageUri.split('/').pop().split('.')[0];
-                const userImageName = `${fileName}.png`;
-                setImageName(userImageName);
-                console.log("nombre imagen", userImageName);
-                console.log(result.assets[0].uri)
-            }
-        } catch (error) { console.log("Error al cargar la imagen", error); }
-    };
-
-    const getImgLogo = (imgUrl) => {
-        if (imgUrl.length > 0) {
-            return { uri: imgUrl }
-        } else {
-            return require("../../assets/avatar.png");
-        }
-    }
-
-
     buttonAceptModal = ()=>{
         setModalVisible(false);
     }
@@ -265,44 +231,6 @@ const Profile = ({ navigation }) => {
         <Principal>
             <ScrollView>
                 <Text style={commonStyles.textTile}>Perfil</Text>
-                <View style={styles.container}>
-                    {
-                        viewName ? (
-                            <Image
-                                style={styles.img}
-                                source={getImgLogo(newAvatar)}
-                            />
-                        ) : (
-                            <Image
-                                style={styles.img}
-                                source={getImgLogo(newAvatar)}
-                            />
-                        )
-                    }
-                    <View style={styles.containerBtnCharge}>
-                        {
-                            viewName ? (
-                                <TouchableOpacity activeOpacity={0.5}
-                                    style={styles.btnCharge}
-                                    onPress={selectImage}
-                                >
-                                    <Avatar
-                                        size={64}
-                                        icon={{ name: "camera", type: "feather", color: colors.payneGray, size: 50 }}
-                                        containerStyle={{ marginTop: -190, backgroundColor: "transparent", marginLeft: -2.5 }}
-                                        onPress={selectImage}
-                                    />
-                                </TouchableOpacity>
-                            ) : <></>
-                        }
-                        {
-                            setNewAvatar == '' &&
-                            <Text style={[commonStyles.errorInput, { marginTop: -10, marginBottom: 20 }]}>
-                                {errorImage}
-                            </Text>
-                        }
-                    </View>
-                </View>
                 <View style={[commonStyles.containerButton, {
                     justifyContent: 'flex-start', flexDirection: 'row',
                     alignItems: 'center', marginRight: '5%', marginLeft: '20%'

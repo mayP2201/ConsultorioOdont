@@ -7,14 +7,18 @@ import { useState } from 'react';
 import { messages } from '../common/messages';
 import axios from 'axios';
 import ModalC from '../components/ModalC';
+import ReturnButton from '../components/ReturnButton';
+import { useContext } from 'react';
+import { CContext } from '../context/CContext';
 
 const Code = ({ navigation }) => {
 
     const [code, setCode] = useState("");
     const [codeError, setCodeError] = useState();
     const [modalVisibleError, setModalVisibleError] = useState(false);
-
+    const { handleChangevisibleModal } = useContext(CContext);
     const handleVerifyCode = async () => {
+        handleChangevisibleModal(true);
         try {
             const response = await axios.post('https://endpointsco-production.up.railway.app/api/check-code',
                 { code }
@@ -22,7 +26,9 @@ const Code = ({ navigation }) => {
             );
             verify();
             navigation.navigate('NewPassword', { code });
+            handleChangevisibleModal(false);
         } catch (error) {
+            console.log("error",error.message);
             setModalVisibleError(true);
         }
     };
@@ -56,13 +62,14 @@ const Code = ({ navigation }) => {
 
     buttonAceptError = () => {
         setModalVisibleError(false);
+        handleChangevisibleModal(false);
     }
 
     return (
         <Principal>
             <ScrollView>
                 <View>
-                    <Text style={commonStyles.textTile}>RECUPERAR</Text>
+                    <Text style={commonStyles.textTile}>REESTABLECER</Text>
                     <Text style={styles.textTile1}>CONTRASEÑA</Text>
                     <Text style={commonStyles.textDescription}>Escribe el código que hemos enviado a tu correo electrónico</Text>
                     <View style={styles.principalContainer}>
@@ -76,7 +83,7 @@ const Code = ({ navigation }) => {
                                 leftIcon={
                                     <Icon name="qrcode" type="antdesign" size={25} color={colors.blue} />
                                 }
-                                keyboardType={"email-address"}
+                                keyboardType={"numeric"}
                                 maxLength={75}
                                 errorMessage={(codeError ? codeError : "")}
                                 errorStyle={commonStyles.errorStyle}
@@ -111,11 +118,13 @@ const Code = ({ navigation }) => {
                             onAccept={buttonAceptError}
                             modalText="Verifica el código ingresado"
                             showCancelButton={false}
+                            acceptButtonText="Aceptar"
                             imageModal={require('../../assets/attention.png')}
                         />
                     </View>
                 </View>
             </ScrollView>
+            <ReturnButton onPress={() => navigation.goBack()} />
         </Principal>
     );
 }

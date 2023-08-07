@@ -9,7 +9,7 @@ import { useContext } from 'react';
 import { CContext } from '../context/CContext';
 import ReturnButton from '../components/ReturnButton';
 
-const Information = ({navigation}) => {
+const Information = ({ navigation }) => {
 
   const { doctorDataContext } = useContext(CContext);
   console.log("--->>>datos doctores informacion -->", doctorDataContext);
@@ -37,20 +37,19 @@ const Information = ({navigation}) => {
               </View>
             ))}
           </View>
-          <View style={styles.infoContainer}>
-            <View style={styles.infoTextContent}>
-              <Text style={[styles.infoText, { textAlign: 'left', fontWeight: 'bold' }]}>Atención: </Text>
-              <Text style={styles.infoText}>Lunes a Viernes </Text>
-              <Text style={styles.infoText}>8:00 a 17:00</Text>
-              <Text style={styles.infoText}>Para más información visita nuestra web</Text>
-              <TouchableOpacity>
-                <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>www.odontoarias.com</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
         </View>
       </ScrollView>
-      <ReturnButton onPress={() => navigation.goBack()} />
+      <View style={styles.infoContainer}>
+        <View style={styles.infoTextContent}>
+          <Text style={[styles.infoText, { textAlign: 'left', fontWeight: 'bold' }]}>Atención: </Text>
+          <Text style={styles.infoText}>Lunes a Viernes </Text>
+          <Text style={styles.infoText}>8:00 a 17:00</Text>
+          <Text style={styles.infoText}>Para más información visita nuestra web</Text>
+          <TouchableOpacity>
+            <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>www.odontoarias.com</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </Principal>
   );
 }
@@ -60,8 +59,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     borderRadius: 15,
     borderColor: colors.lightBlue,
-    margin: '3%'
-
+    margin: '3%',
   },
   containerP: {
     //backgroundColor:'yellow',
@@ -93,10 +91,10 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     backgroundColor: colors.base,
-    flex:1,
-    justifyContent:'flex-end',
-    alignItems:'center',
-  
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+
   },
   infoTextContent: {
     //backgroundColor: 'yellow',
