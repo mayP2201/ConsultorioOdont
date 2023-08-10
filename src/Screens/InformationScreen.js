@@ -38,18 +38,19 @@ const Information = ({ navigation }) => {
             ))}
           </View>
         </View>
-      </ScrollView>
-      <View style={styles.infoContainer}>
-        <View style={styles.infoTextContent}>
-          <Text style={[styles.infoText, { textAlign: 'left', fontWeight: 'bold' }]}>Atención: </Text>
-          <Text style={styles.infoText}>Lunes a Viernes </Text>
-          <Text style={styles.infoText}>8:00 a 17:00</Text>
-          <Text style={styles.infoText}>Para más información visita nuestra web</Text>
-          <TouchableOpacity>
-            <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>www.odontoarias.com</Text>
-          </TouchableOpacity>
+        <View style={styles.infoContainer}>
+          <View style={styles.infoTextContent}>
+            <Text style={[styles.infoText, { textAlign: 'left', fontWeight: 'bold' }]}>Atención: </Text>
+            <Text style={styles.infoText}>Lunes a Viernes </Text>
+            <Text style={styles.infoText}>8:00 a 17:00</Text>
+            <Text style={styles.infoText}>Para más información visita nuestra web</Text>
+            <TouchableOpacity>
+              <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>www.odontoarias.com</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
+      <ReturnButton onPress={() => navigation.goBack()} />
     </Principal>
   );
 }

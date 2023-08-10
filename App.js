@@ -39,11 +39,12 @@ const MenuItems = ({ navigation }) => {
       <View style={styles.headerArea}>
       </View>
       <Image
-        source={require("./assets/logo.png")}
+        source={require("./assets/ODONTOARIAS.jpeg")}
         style={{
           width: Dimensions.get("window").width * (440 / 1000),
           height: Dimensions.get("window").height * (100 / 1000) + StatusBar.currentHeight,
           margin: '5%',
+          borderRadius: 30
         }}
       />
 
@@ -85,13 +86,16 @@ const MenuItems = ({ navigation }) => {
 
 const MenuItems1 = ({ navigation }) => {
   return (
-    <DrawerContentScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <DrawerContentScrollView style={styles.container} showsVerticalScrollIndicator={false} nestedScrollEnabled={false}>
+      <View style={styles.headerArea}>
+      </View>
       <Image
-        source={require("./assets/logo.png")}
+        source={require("./assets/ODONTOARIAS.jpeg")}
         style={{
           width: Dimensions.get("window").width * (450 / 1000),
           height: Dimensions.get("window").height * (100 / 1000) + StatusBar.currentHeight,
           margin: '5%',
+          borderRadius:30
 
         }}
       />

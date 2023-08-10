@@ -129,7 +129,8 @@ const Login = ({ navigation }) => {
             <ScrollView>
                 <View style={styles.img}>
                     <Image
-                        source={require('../../assets/logo.png')}
+                        source={require('../../assets/ODONTOARIAS.jpeg')}
+                        style={{ width: 300, height: 200, borderRadius:30 }}
                     />
                 </View>
                 <View style={styles.input}>
