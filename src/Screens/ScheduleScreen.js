@@ -209,6 +209,7 @@ export const Schedule = ({ navigation }) => {
           />
         </View>
       </ScrollView>
+      <ReturnButton onPress={() => navigation.navigate("DrawerCancelar")}></ReturnButton>
     </Principal>
   )
 }
