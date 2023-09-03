@@ -35,7 +35,9 @@ npm start
 ```
 
 desde el play store instalar el expo go
+
 ![Imagen de WhatsApp 2023-09-03 a las 18 33 33](https://github.com/mayP2201/ConsultorioOdont/assets/128390603/27dccc8e-0df0-4a96-9ffc-b7b8bb2a3df7)
+
 
 escanear el codigo qr desde la aplicacion de expo go
 
