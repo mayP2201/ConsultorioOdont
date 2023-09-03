@@ -10,10 +10,10 @@ https://play.google.com/store/apps/details?id=com.maypam2201.consultorio&pcampai
 ## Enlace para el Manual de usuario
 https://www.youtube.com/watch?v=qN29E29R-ck
 
-## Manual de instalacion
+## Manual de instalación
 Instalar el proyecto localmente se necesita seguir los siguientes pasos:
 
-Instalar el Node JS desde la siguiente pagina:
+Instalar el Node JS desde la siguiente página:
 https://nodejs.org/es
 
 Instalar expo-cli desde el siguiente comando.
@@ -24,22 +24,22 @@ npm install --global expo-cli
 Descargar el comprimido ZIP
 [Proyecto ZIP]([https://github.com/Lesly-liseth/Odontoarias/archive/refs/heads/master.zip](https://github.com/mayP2201/ConsultorioOdont.git))
 
-una vez descomprimido el proyecto ejecutar el siugiente comando para instalar las dependencias:
+Una vez descomprimido el proyecto ejecutar el siugiente comando para instalar las dependencias:
 ```bash
 npm install 
 ```
 
-ejecutar el siguiente copamdo para observar el codigo QR que se utilizara luego para observar el proyecto desde el dispositivo movil:
+Ejecutar el siguiente comando para observar el codigo QR que se utilizara luego para observar el proyecto desde el dispositivo móvil:
 ```bash
 npm start
 ```
 
-desde el play store instalar el expo go
+Desde el play store instalar el Expo Go
 
 ![Imagen de WhatsApp 2023-09-03 a las 18 33 33](https://github.com/mayP2201/ConsultorioOdont/assets/128390603/27dccc8e-0df0-4a96-9ffc-b7b8bb2a3df7)
 
 
-escanear el codigo qr desde la aplicacion de expo go
+Escanear el codigo QR desde la aplicacón de Expo Go
 
 
 ## Autores
