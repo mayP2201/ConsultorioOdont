@@ -31,7 +31,7 @@ npm install
 
 Ejecutar el siguiente comando para observar el codigo QR que se utilizara luego para observar el proyecto desde el dispositivo móvil:
 ```bash
-npm start
+expo start
 ```
 
 Desde el play store instalar el Expo Go
