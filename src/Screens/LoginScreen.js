@@ -63,6 +63,7 @@ const Login = ({ navigation }) => {
 
     const handleLogin = () => {
         handleChangevisibleModal(true);
+        console.log("push notificacion token: ----->", expoPushToken);
         axios
             .post('https://endpointsco-production.up.railway.app/api/login', {
                 email: email,

@@ -32,7 +32,7 @@ const Profile = ({ navigation }) => {
     const [errorAddress, setErrorAddress] = useState("");
     const [viewName, setViewName] = useState(false);
     const [editable, setEditable] = useState(false);
-    const { token, handleChangevisibleModal} = useContext(CContext);
+    const { token, handleChangevisibleModal } = useContext(CContext);
     const [userData, setUserData] = useState([]);
     const { userDataContext } = useContext(CContext);
     const [message, setMessege] = useState(null);
@@ -42,7 +42,7 @@ const Profile = ({ navigation }) => {
 
     useEffect(() => {
         viewData();
-      }, []);
+    }, []);
     const updateUserData = async () => {
         handleChangevisibleModal(true);
         try {
@@ -74,7 +74,7 @@ const Profile = ({ navigation }) => {
         } catch (error) {
             setModalVisibleError(true);
             handleChangevisibleModal(false);
-            
+
         }
     };
 
@@ -221,26 +221,31 @@ const Profile = ({ navigation }) => {
         setAddress(userDataContext.address);
     }
 
-    const buttonAceptModal = ()=>{
+    const buttonAceptModal = () => {
         setModalVisible(false);
         handleChangevisibleModal(false);
         navigation.goBack();
     }
 
-    const buttonAceptModalError = () =>{
+    const buttonAceptModalError = () => {
         setModalVisibleError(false);
         handleChangevisibleModal(false);
     }
+
     return (
         <Principal>
             <ScrollView>
-                <Text style={commonStyles.textTile}>Perfil</Text>
+                <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                    <Text style={commonStyles.textTile}>Perfil: </Text>
+                    <Text style={[commonStyles.textTile,{fontWeight:'500'}]}>{userDataContext.rol_id == 2 ? "Odontólogo" : "Paciente"}</Text>
+                </View>
+
                 <View style={[commonStyles.containerButton, {
                     justifyContent: 'flex-start', flexDirection: 'row',
                     alignItems: 'center', marginRight: '5%', marginLeft: '20%'
                 }]}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-                        <Text style={styles.nameText}>{userData.names} {userData.surnames}</Text>
+                        <Text style={styles.nameText}>{userDataContext.names} {userDataContext.surnames}</Text>
                     </View>
                     <View>
                         <Icon
@@ -378,13 +383,13 @@ const Profile = ({ navigation }) => {
                     modalVisible={modalVisibleError}
                     setModalVisible={setModalVisibleError}
                     onAccept={buttonAceptModalError}
-                    modalText= 'Verifique los datos ingresados'
+                    modalText='Verifique los datos ingresados'
                     showCancelButton={false}
                     imageModal={require('../../assets/attention.png')}
                     acceptButtonText="Aceptar"
                 />
             </ScrollView>
-            <ReturnButton onPress={()=> navigation.goBack()} />
+            <ReturnButton onPress={() => navigation.goBack()} />
         </Principal>
     );
 }

@@ -32,42 +32,48 @@ const InformationAppointment = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        const allAppointments = response.data.flat();
+        const patientAppointments = allAppointments.filter(
+          (appointment) =>
+            appointment.identity_card_user == userDataContext.identity_card_user &&
+            appointment.id_status == 2
+        );
+        patientAppointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+        // Obtener los IDs de los pacientes de las citas
+        const patientIds = patientAppointments.map((appointment) => appointment.id_patient);
 
-      const allAppointments = response.data.flat();
-      const patientAppointments = allAppointments.filter(
-        (appointment) =>
-          appointment.identity_card_user == userDataContext.identity_card_user &&
-          appointment.id_status == 2
-      );
+        // Realizar una consulta para obtener los nombres y apellidos de los pacientes
+        const patientNamesPromises = patientIds.map((id) =>
+          axios.get(`https://endpointsco-production.up.railway.app/api/get-user/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+        );
+        const patientNamesResponses = await Promise.all(patientNamesPromises);
+        const patientNames = patientNamesResponses.map((response) => {
+          const patientData = response.data;
+          return `${patientData.names} ${patientData.surnames}`;
+        });
 
-      // Obtener los IDs de los pacientes de las citas
-      const patientIds = patientAppointments.map((appointment) => appointment.id_patient);
+        // Combinar los datos de las citas con los nombres de los pacientes
+        const combinedData = patientAppointments.map((appointment, index) => ({
+          id: appointment.id,
+          id_patient: appointment.id_patient,
+          patientName: patientNames[index],
+          date: appointment.date,
+          time: appointment.start_time,
+        }));
 
-      // Realizar una consulta para obtener los nombres y apellidos de los pacientes
-      const patientNamesPromises = patientIds.map((id) =>
-        axios.get(`https://endpointsco-production.up.railway.app/api/get-user/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-      );
-      const patientNamesResponses = await Promise.all(patientNamesPromises);
-      const patientNames = patientNamesResponses.map((response) => {
-        const patientData = response.data;
-        return `${patientData.names} ${patientData.surnames}`;
-      });
-
-      // Combinar los datos de las citas con los nombres de los pacientes
-      const combinedData = patientAppointments.map((appointment, index) => ({
-        id: appointment.id,
-        id_patient: appointment.id_patient,
-        patientName: patientNames[index],
-        date: appointment.date,
-        time: appointment.start_time,
-      }));
-
-      setAppointment(combinedData);
-      handleChangevisibleModal(false);
+        setAppointment(combinedData);
+        handleChangevisibleModal(false);
+      }
+      else {
+        handleChangevisibleModal(false);
+      }
     } catch (error) {
+      handleChangevisibleModal(false);
       console.log(error);
+
     }
   };
 
@@ -123,7 +129,7 @@ const InformationAppointment = () => {
     <Principal>
       <ScrollView>
         <View>
-        <View style={{
+          <View style={{
             marginHorizontal: '8%',
             marginTop: '5%'
           }}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, Linking } from 'react-native';
 import { View, StyleSheet } from 'react-native';
 import { colors, commonStyles } from '../common/globalStyle';
 import Principal from '../components/Principal';
@@ -12,7 +12,13 @@ import ReturnButton from '../components/ReturnButton';
 const Information = ({ navigation }) => {
 
   const { doctorDataContext } = useContext(CContext);
-  console.log("--->>>datos doctores informacion -->", doctorDataContext);
+  const web = 'https://odontoarias-production.up.railway.app/'
+
+  
+  const handleOpenWebLink = () => {
+    Linking.openURL(web)
+      .catch(err => console.error('Error al abrir el enlace: ', err));
+  };
   return (
     <Principal>
       <ScrollView>
@@ -41,11 +47,12 @@ const Information = ({ navigation }) => {
         <View style={styles.infoContainer}>
           <View style={styles.infoTextContent}>
             <Text style={[styles.infoText, { textAlign: 'left', fontWeight: 'bold' }]}>Atención: </Text>
-            <Text style={styles.infoText}>Lunes a Viernes </Text>
-            <Text style={styles.infoText}>8:00 a 17:00</Text>
+            <Text style={styles.infoText}>Lunes a Viernes 9:00 a 20:00</Text>
+            <Text style={styles.infoText}>Sábado 9:00 a 19:00</Text>
+            <Text style={styles.infoText}>Domingo 10:00 a 14:00</Text>
             <Text style={styles.infoText}>Para más información visita nuestra web</Text>
-            <TouchableOpacity>
-              <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>www.odontoarias.com</Text>
+            <TouchableOpacity onPress={handleOpenWebLink}>
+              <Text style={[styles.textWeb, { fontWeight: 'bold' }]}>{web}</Text>
             </TouchableOpacity>
           </View>
         </View>

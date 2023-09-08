@@ -42,10 +42,12 @@ export const Cancelar = ({ navigation }) => {
         (appointment) => appointment.id_patient == userDataContext.identity_card_user &&
           appointment.id_status == 2
       );
+      patientAppointments.sort((a, b) => new Date(a.date) - new Date(b.date));
       console.log("cita de miiiii perfil ", patientAppointments);
       setAppointment(patientAppointments);
       handleChangevisibleModal(false);
     } catch (error) {
+      handleChangevisibleModal(false);
       console.log(error);
     }
   };
@@ -84,6 +86,7 @@ export const Cancelar = ({ navigation }) => {
         prevAppointments.filter((appointment) => appointment.id !== id_cita)
       );
     } catch (error) {
+      handleChangevisibleModal(false);
       console.log("error tomar citas", error);
 
     }
@@ -116,7 +119,7 @@ export const Cancelar = ({ navigation }) => {
   const showMessage = () => {
     setTimeout(() => {
       setMessege('');
-    }, 8000);
+    }, 10000);
   };
 
   const buttonAppointmentModal = (navigate) => {

@@ -100,7 +100,7 @@ export const Schedule = ({ navigation }) => {
   const showMessage = () => {
     setTimeout(() => {
       setMessege('');
-    }, 8000);
+    }, 10000);
   };
 
   const doctorSelector = (selectDoctor) => {

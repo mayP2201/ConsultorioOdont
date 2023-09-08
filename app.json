@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "consultorio",
+    "name": "OdontoArias",
     "slug": "consultorio",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,8 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.maypam2201.consultorio",
-      "versionCode":1
+      "googleServicesFile": "./google-services.json",
+      "versionCode":3
     },
     "web": {
       "favicon": "./assets/favicon.png"
